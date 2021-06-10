@@ -9,8 +9,6 @@
 #include "charset.h"
 #include <string.h>
 
-// hej
-
 void lcd_write_string(char str[], int32_t slice, uint8_t line){
 	uint8_t buffer[512];
 	int32_t i, j;

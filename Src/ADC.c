@@ -39,7 +39,6 @@ void initADC(){
 }
 
 uint16_t readADC(uint8_t channel){
-	// hej
 	if (channel == 1){
 		ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_1Cycles5);
 	} else {

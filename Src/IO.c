@@ -74,7 +74,6 @@ void initIOLED(){
 }
 
 int8_t readJoystick(){
-	// karl
 	int8_t C, U, D, L, R, IO = 0;;
 	U = (GPIOA->IDR & (0x0001 << 4));
 	D = (GPIOB->IDR & (0x0001 << 0));
