@@ -15,12 +15,14 @@
 #include "player.h"
 #include "math.h"
 
+#define FIX14_SHIFT 14
+#define FIX14_MULT(a,b) (((a)*(b)) >> FIX14_SHIFT)
+#define FIX14_DIV(a,b) (((a)<<FIX14_SHIFT)/b)
 
 int main(void){
 	// Initialization
 	uart_init(115200);
 	clrscr();
-	global = 0;
 
 	initADC();
 	initIOJoystick();
@@ -29,23 +31,13 @@ int main(void){
 	// drawWindowNoTitle(1,1,255,127,1);
 	struct player_t p1;
 	initPlayer(&p1, 8736, 12);
-	/*
-	// boi
-	printFix(expand(p1.posX));
-	printf("\n");
 
-
-	printFix(expand(p1.posY));
-
-	*/
-
-	printf("%ld", approxShift14(p1.posX + 0x00002000));
+	printf("%ld", approxShift14(p1.posX + 0x00001FFF));
 	while(1){
 		if (global == 1){
 
 			global = 0;
 		}
-
 	}
 }
 
