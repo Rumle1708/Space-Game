@@ -12,6 +12,8 @@
 #include "LCD.h"
 #include "main.h"
 #include "ADC.h"
+#include "player.h"
+#include "math.h"
 
 
 int main(void){
@@ -25,6 +27,19 @@ int main(void){
 	lcd_init();
 	initTimer();
 	// drawWindowNoTitle(1,1,255,127,1);
+	struct player_t p1;
+	initPlayer(&p1, 8736, 12);
+	/*
+
+	printFix(expand(p1.posX));
+	printf("\n");
+
+
+	printFix(expand(p1.posY));
+
+	*/
+
+	printf("%ld", approxShift14(p1.posX + 0x00002000));
 	while(1){
 		if (global == 1){
 
