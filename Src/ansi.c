@@ -153,7 +153,7 @@ void drawWindow(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, char title[], ui
 	}
 }
 
-void drawWindowNoTitle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t style){
+void drawWindowNoTitle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t style){
 	uint8_t i;
 	int corner1, corner2, corner3, corner4, bottom, side;
 	if (style == 0){

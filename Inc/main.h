@@ -8,7 +8,9 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-volatile int32_t hours, minutes, seconds, centiseconds, flag;
+
+
+volatile int32_t global;
 
 
 #endif /* MAIN_H_ */
