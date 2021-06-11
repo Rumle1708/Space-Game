@@ -30,7 +30,7 @@ int main(void){
 	struct player_t p1;
 	initPlayer(&p1, 8736, 12);
 	/*
-
+	// boi
 	printFix(expand(p1.posX));
 	printf("\n");
 
