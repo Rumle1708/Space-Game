@@ -55,8 +55,8 @@ void rotateBall(struct ball_t *b, int32_t angle){
 
 void ballGame(struct ball_t *b,uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2){
 	int32_t hit = 0;
-	drawWindowNoTitle(x1,y1,x2,y2,1);
-	drawWindowNoTitle(x1,y2 + 1,x1 + 9,y2 + 3,1);
+	//drawWindowNoTitle(x1,y1,x2,y2,1);
+	//drawWindowNoTitle(x1,y2 + 1,x1 + 9,y2 + 3,1);
 	gotoxy(x1 + 1,y2 + 2);
 	printf("Hits:");
 	b->posX = (x1 + 1) << FIX14_SHIFT;

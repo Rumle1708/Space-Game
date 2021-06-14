@@ -4,7 +4,7 @@
 
 
 
-// Approxiamtes a fixed point number to the nearest integer
+// Approximates a fixed point number to the nearest integer
 int32_t approxShift14(int32_t n){
 	int32_t temp = n;
 

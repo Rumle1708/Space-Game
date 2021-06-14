@@ -4,6 +4,7 @@
 #include "stdio.h"
 #include "stdint.h"
 #include <string.h>
+#include "thorTing.h"
 
 void fgcolor(uint8_t foreground) {
 /*  Value      foreground     Value     foreground
@@ -70,8 +71,8 @@ void clreol(){
 	printf("%c[2K", 0x1B);
 }
 
-void gotoxy(uint8_t x, uint8_t y){
-	printf("%c[%d;%dH", 0x1B, y, x);
+void gotoxy(uint32_t x, uint32_t y){
+	printf("%c[%d;%df", 0x1B, y, x);
 }
 
 void underline(uint8_t on){
@@ -90,8 +91,12 @@ void blink(uint8_t on){
 	}
 }
 
-void drawWindow(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, char title[], uint8_t style){
-	uint8_t i;
+void drawWindow(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, char title[], uint32_t style, struct gameWindow *w){
+	uint32_t i;
+	(*w).x1 = x1;
+	(*w).x2 = x2;
+	(*w).y1 = y1;
+	(*w).y2 = y2;
 	int corner1, corner2, corner3, corner4, titleLeft, titleRight, bottom, side;
 	if (style == 0){
 		corner1 = 0xDA;
@@ -153,8 +158,8 @@ void drawWindow(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, char title[], ui
 	}
 }
 
-void drawWindowNoTitle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t style){
-	uint8_t i;
+void drawWindowNoTitle(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t style){
+	uint32_t i;
 	int corner1, corner2, corner3, corner4, bottom, side;
 	if (style == 0){
 		corner1 = 0xDA;
@@ -203,18 +208,18 @@ void drawWindowNoTitle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t s
 	}
 }
 
-void moveUp(uint8_t n){
+void moveUp(uint32_t n){
 	printf("%c[%dA", 0x1B, n);
 }
 
-void moveDown(uint8_t n){
+void moveDown(uint32_t n){
 	printf("%c[%dB", 0x1B, n);
 }
 
-void moveForward(uint8_t n){
+void moveForward(uint32_t n){
 	printf("%c[%dC", 0x1B, n);
 }
 
-void moveBack(uint8_t n){
+void moveBack(uint32_t n){
 	printf("%c[%dD", 0x1B, n);
 }

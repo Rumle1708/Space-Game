@@ -16,18 +16,26 @@ void initPlayer(struct player_t *p, int32_t x, int32_t y){
 	p->velY = 0;
 	p->angle = 0;
 }
+void deletePlayer(struct player_t *p){
+	int32_t x, y;
+	x = approxShift14(p->posX);
+	y = approxShift14(p->posY);
+	fgcolor(15);
+	gotoxy(x - 1,y);
+	printf("   ");
+	gotoxy(x,y + 1);
+	printf(" ");
+	gotoxy(x,y - 1);
+	printf(" ");
+}
 
 void drawPlayer(struct player_t *p){
 	int32_t x, y;
 	x = approxShift14(p->posX);
 	y = approxShift14(p->posY);
 	fgcolor(15);
-	gotoxy(x,y);
-	printf("%c", 0xDB);
-	gotoxy(x + 1,y);
-	printf("%c", 0xDB);
 	gotoxy(x - 1,y);
-	printf("%c", 0xDB);
+	printf("%c%c%c", 0xDB, 0xDB, 0xDB);
 	gotoxy(x,y + 1);
 	printf("%c", 0xDB);
 	gotoxy(x,y - 1);
@@ -48,6 +56,8 @@ void drawPlayer(struct player_t *p){
 }
 
 void updatePlayer(struct player_t *p, int32_t update){
+
+	deletePlayer(p);
 
 	// Check right turn
 	if (CHECK_BIT(update,3)){
@@ -70,13 +80,18 @@ void updatePlayer(struct player_t *p, int32_t update){
 	// Check forward
 	if (CHECK_BIT(update,0)){
 		p->velX += cosinus(p->angle) >> 4;
-		p->velY += sinus(p->angle) >> 4;
+		p->velY += sinus(p->angle) >> 5;
 	}
 
 	// Check backwards
 	if (CHECK_BIT(update,1)){
 		p->velX -= cosinus(p->angle) >> 4;
-		p->velY -= sinus(p->angle) >> 4;
+		p->velY -= sinus(p->angle) >> 5;
+	}
+
+	if (!CHECK_BIT(update,0) || !CHECK_BIT(update,1) || !CHECK_BIT(update,2) || !CHECK_BIT(update,3)){
+		p->velX = FIX14_MULT(p->velX, 0b11111010000000);
+		p->velY = FIX14_MULT(p->velY, 0b11111010000000);
 	}
 
 	p->posX += p->velX;
@@ -94,7 +109,7 @@ void updatePlayer(struct player_t *p, int32_t update){
 	printf("\nvelY: ");
 	printFix(expand(p->velY));
 	printf("\nangle: ");
-	printf("%ld / 360", p->angle);
+	printf("%ld    ", p->angle);
 }
 
 /*
