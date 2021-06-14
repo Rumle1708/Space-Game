@@ -91,12 +91,8 @@ void blink(uint8_t on){
 	}
 }
 
-void drawWindow(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, char title[], uint32_t style, struct gameWindow *w){
+void drawWindow(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, char title[], uint32_t style){
 	uint32_t i;
-	(*w).x1 = x1;
-	(*w).x2 = x2;
-	(*w).y1 = y1;
-	(*w).y2 = y2;
 	int corner1, corner2, corner3, corner4, titleLeft, titleRight, bottom, side;
 	if (style == 0){
 		corner1 = 0xDA;

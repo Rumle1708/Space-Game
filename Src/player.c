@@ -4,6 +4,7 @@
 #include "LUT.h"
 #include "ansi.h"
 #include "math.h"
+#include "window.h"
 
 struct player_t{
 	int32_t posX, posY, velX, velY, angle;
@@ -55,7 +56,7 @@ void drawPlayer(struct player_t *p){
 	}
 }
 
-void updatePlayer(struct player_t *p, int32_t update){
+void updatePlayer(struct player_t *p, int32_t update, struct window_t w){
 
 	deletePlayer(p);
 
@@ -94,7 +95,19 @@ void updatePlayer(struct player_t *p, int32_t update){
 		p->velY = FIX14_MULT(p->velY, 0b11111010000000);
 	}
 
-	p->posX += p->velX;
+
+	if (approxShift14(p->posX) > (w.x2 - 4)){
+		p->posX = (w.x2 - 4) << FIX14_SHIFT;
+		p->velX = 0;
+	} /*
+	else if (approxShift14(p->posX) < w->x1 + 4){
+		p->posX = (w->x1 + 4) << FIX14_SHIFT;
+		p->velX = 0;
+	} */
+
+	else {
+		p->posX += p->velX;
+	}
 	p->posY += p->velY;
 
 	drawPlayer(p);
@@ -110,6 +123,7 @@ void updatePlayer(struct player_t *p, int32_t update){
 	printFix(expand(p->velY));
 	printf("\nangle: ");
 	printf("%ld    ", p->angle);
+	printf("\n Dette er w -> x1: %ld     " , w.x1 + 4);
 }
 
 /*

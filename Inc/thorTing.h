@@ -7,13 +7,6 @@
 #ifndef THORTING_H_
 #define THORTING_H_
 
-#define Height 7
-#define Width 10
-
-struct gameWindow {
-	int8_t x1, y1, x2, y2;
-};
-
 struct gravity {
 	int32_t x, y;
 };

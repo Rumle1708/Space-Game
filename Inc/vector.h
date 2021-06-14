@@ -4,7 +4,6 @@
  *  Created on: 7 Jun 2021
  *      Author: Mads Rumle Nordstrom
  */
-#include "30010_io.h"
 #ifndef VECTOR_H_
 #define VECTOR_H_
 

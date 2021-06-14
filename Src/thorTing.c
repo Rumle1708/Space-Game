@@ -10,8 +10,18 @@
 #include "ansi.h"
 #include "player.h"
 #include "main.h"
-#include "thorTing.h"
 #include "string.h"
+
+#define Height 7
+#define Width 10
+
+struct gravity {
+	int32_t x, y;
+};
+
+struct asteroid {
+	int32_t x, y, size, vol;
+};
 
 void drawAsteroid(struct asteroid *a, int32_t x1, int32_t y1, int32_t size1) {
 	(*a).x = x1;
@@ -50,7 +60,7 @@ void gravity (struct asteroid a, struct player_t p, struct gravity *g) {
 }
 
 
-int collision (struct player_t p, struct asteroid a, struct gameWindow w) {
+int collision (struct player_t p, struct asteroid a, struct window_t w) {
 	int c = 0;
 	int32_t i;
 	if (p.posX >= a.x && p.posY <= a.y) { // første kvadrant
