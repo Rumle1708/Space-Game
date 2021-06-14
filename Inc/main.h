@@ -12,6 +12,8 @@
 #define FIX14_MULT(a,b) (((a)*(b)) >> FIX14_SHIFT)
 #define FIX14_DIV(a,b) (((a)<<FIX14_SHIFT)/b)
 
+#define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
+
 #define M_PI
 
 volatile int32_t global;

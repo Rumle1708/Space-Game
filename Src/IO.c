@@ -93,7 +93,7 @@ int8_t readJoystick(){
 
 	if (U != 0){
 		// printf("Up ");
-		IO ^= 1 << 4;
+		IO ^= 1 << 0;
 	}
 
 	if (L != 0){
