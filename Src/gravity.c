@@ -29,3 +29,17 @@ void force (*g, asteroid) {
 	(*g).y = gravityConst * vol / dist^2 * deviceVectorY;
 }
 */
+
+struct asteroid {
+
+};
+
+struct asteroid a;
+
+void drawAsteroid(*size) {
+	int32_t x1 = *size * 1.5, y1 = *size;
+	for (int i = 0; i <= 360; i = i + 1) {
+		gotoxy(approxShift14(cosinus(i)*x1) + 50, approxShift14(sinus(i)*y1) + 50);
+		printf("%s", "o");
+	}
+}

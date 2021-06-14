@@ -32,7 +32,11 @@ int main(void){
 	struct player_t p1;
 	initPlayer(&p1, 8736, 12);
 
-	printf("%ld", approxShift14(p1.posX + 0x00001FFF));
+	int32_t x1 = 30, y1 = 20;
+	for (int i = 0; i <= 360; i = i + 1) {
+		gotoxy(approxShift14(sinus(i)*x1) + 50, approxShift14(cosinus(i)*y1) + 50);
+		printf("%s", "o");
+	}
 	while(1){
 		if (global == 1){
 
