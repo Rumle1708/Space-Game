@@ -58,28 +58,6 @@ int main(void){
 	}
 	*/
 
-	int32_t getKey(){
-		int32_t value = 0;
-		char boi = uart_get_char();
-		if ('w' == boi){
-			value ^= 1 << 0;
-		}
-		if ('s' == boi){
-			value ^= 1 << 1;
-		}
-		if ('d' == boi){
-			value ^= 1 << 2;
-		}
-		if ('a' == boi){
-			value ^= 1 << 3;
-		}
-		if (' ' == boi){
-			value ^= 1 << 4;
-		}
-		uart_clear();
-		return value;
-	}
-
 	while(1){
 		if (global == 1){
 			updatePlayer(&p1, getKey());
