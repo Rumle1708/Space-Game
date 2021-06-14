@@ -364,5 +364,5 @@ void titleScreen(char letter[]) {
 				y1 = y1 + 10;
 				x1 = 10;
 			}
-	}//tekst
+	}//teks
 }

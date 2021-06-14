@@ -29,4 +29,4 @@ void titleScreen(char letter[]);
 
 #endif	// THORTING_H
 
-//tekst
+//teks
