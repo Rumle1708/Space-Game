@@ -1,5 +1,5 @@
-#include "stm32f30x_conf.h" // STM32 config
-#include "30010_io.h" 		// Input/output library for this course
+#include "stm32f30x_conf.h"
+#include "30010_io.h"
 #include <stdio.h>
 #include <string.h>
 #include "LUT.h"
@@ -10,10 +10,10 @@
 #include "timer.h"
 #include "charset.h"
 #include "LCD.h"
-#include "main.h"
 #include "ADC.h"
 #include "player.h"
 #include "math.h"
+#include "main.h"
 
 #define FIX14_SHIFT 14
 #define FIX14_MULT(a,b) (((a)*(b)) >> FIX14_SHIFT)
@@ -24,6 +24,7 @@
 int main(void){
 	// Initialization
 	uart_init(115200);
+	uart_clear();
 	clrscr();
 
 	initADC();
@@ -34,6 +35,7 @@ int main(void){
 	struct player_t p1;
 	initPlayer(&p1, 50, 10);
 
+	/*
 	void drawWeirdShit(int32_t r){
 		r <<= FIX14_SHIFT;
 		int32_t i, x, y;
@@ -54,10 +56,33 @@ int main(void){
 			printf("snof");
 		}
 	}
+	*/
+
+	int32_t getKey(){
+		int32_t value = 0;
+		char boi = uart_get_char();
+		if ('w' == boi){
+			value ^= 1 << 0;
+		}
+		if ('s' == boi){
+			value ^= 1 << 1;
+		}
+		if ('d' == boi){
+			value ^= 1 << 2;
+		}
+		if ('a' == boi){
+			value ^= 1 << 3;
+		}
+		if (' ' == boi){
+			value ^= 1 << 4;
+		}
+		uart_clear();
+		return value;
+	}
 
 	while(1){
 		if (global == 1){
-			updatePlayer(&p1, readJoystick());
+			updatePlayer(&p1, getKey());
 			global = 0;
 		}
 	}

@@ -2,6 +2,8 @@
 #include "30010_io.h" 		// Input/output library for this course
 #include "main.h"
 #include "LUT.h"
+#include "ansi.h"
+#include "math.h"
 
 struct player_t{
 	int32_t posX, posY, velX, velY, angle;
@@ -15,16 +17,54 @@ void initPlayer(struct player_t *p, int32_t x, int32_t y){
 	p->angle = 0;
 }
 
+void drawPlayer(struct player_t *p){
+	int32_t x, y;
+	x = approxShift14(p->posX);
+	y = approxShift14(p->posY);
+	fgcolor(15);
+	gotoxy(x,y);
+	printf("%c", 0xDB);
+	gotoxy(x + 1,y);
+	printf("%c", 0xDB);
+	gotoxy(x - 1,y);
+	printf("%c", 0xDB);
+	gotoxy(x,y + 1);
+	printf("%c", 0xDB);
+	gotoxy(x,y - 1);
+	printf("%c", 0xDB);
+	if (-45 < p->angle && p->angle <= 45){
+		gotoxy(x - 1,y);
+		printf(" ");
+	} else if(45 < p->angle && p->angle <= 135){
+		gotoxy(x,y - 1);
+		printf(" ");
+	} else if ((135 < p->angle && p->angle <= 180) || (-135 > p->angle && p->angle >= -180)){
+		gotoxy(x + 1,y);
+		printf(" ");
+	} else {
+		gotoxy(x,y + 1);
+		printf(" ");
+	}
+}
+
 void updatePlayer(struct player_t *p, int32_t update){
 
 	// Check right turn
 	if (CHECK_BIT(update,3)){
-		p->angle += 5;
+		if (p->angle <= -175){
+			p->angle = 180;
+		} else{
+			p->angle -= 5;
+		}
 	}
 
 	// Check left turn
 	if (CHECK_BIT(update,2)){
-		p->angle -= 5;
+		if (p->angle >= 175){
+			p->angle = -180;
+		} else{
+			p->angle += 5;
+		}
 	}
 
 	// Check forward
@@ -41,7 +81,10 @@ void updatePlayer(struct player_t *p, int32_t update){
 
 	p->posX += p->velX;
 	p->posY += p->velY;
-	/*
+
+	drawPlayer(p);
+
+	gotoxy(0,0);
 	printf("\nposX: ");
 	printFix(expand(p->posX));
 	printf("\nposY: ");
@@ -51,17 +94,7 @@ void updatePlayer(struct player_t *p, int32_t update){
 	printf("\nvelY: ");
 	printFix(expand(p->velY));
 	printf("\nangle: ");
-	printf("%ld", p->angle);
-	printf("\n");
-	printf("\n");
-	printf("\n");
-	*/
-	drawPlayer(p);
-}
-
-void drawPlayer(struct player_t *p){
-	gotoxy(approxShift14(p->posX),approxShift14(p->posY));
-	printf("o");
+	printf("%ld / 360", p->angle);
 }
 
 /*

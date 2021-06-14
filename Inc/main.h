@@ -14,8 +14,6 @@
 
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 
-#define M_PI
-
 volatile int32_t global;
 
 
