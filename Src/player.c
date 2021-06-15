@@ -112,7 +112,6 @@ void updatePlayer(struct player_t *p, int32_t update){
 	}
 	drawPlayer(p);
 
-
 	gotoxy(0,0);
 	printf("\nposX: ");
 	printFix(expand(p->posX));
