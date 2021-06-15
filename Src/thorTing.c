@@ -15,6 +15,8 @@
 #define Height 7
 #define Width 10
 
+/*
+
 struct window_t {
 	int32_t x1, y1, x2, y2;
 };
@@ -384,3 +386,5 @@ void titleScreen(char letter[]) {
 			}
 	}//teks
 }
+
+*/

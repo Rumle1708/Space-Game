@@ -4,7 +4,6 @@
 #include "LUT.h"
 #include "ansi.h"
 #include "math.h"
-#include "window.h"
 
 struct player_t{
 	int32_t posX, posY, velX, velY, angle;
@@ -28,6 +27,29 @@ void deletePlayer(struct player_t *p){
 	printf(" ");
 	gotoxy(x,y - 1);
 	printf(" ");
+}
+
+int32_t joystickAprox(int32_t deg, int32_t throttle){
+
+
+	int32_t out = 0;
+
+	if(throttle > 3000){
+		out ^= 1 << 0;
+	} else if (throttle < 1000){
+		out ^= 1 << 1;
+	}
+
+	if(deg > 3000){
+		out ^= 1 << 2;
+	} else if(deg < 1000){
+		out ^= 1 << 3;
+	}
+
+	return out;
+
+
+
 }
 
 void drawPlayer(struct player_t *p){
@@ -58,6 +80,8 @@ void drawPlayer(struct player_t *p){
 
 void updatePlayer(struct player_t *p, int32_t update){
 	deletePlayer(p);
+
+
 
 	// Check right turn
 	if (CHECK_BIT(update,3)){
@@ -92,6 +116,22 @@ void updatePlayer(struct player_t *p, int32_t update){
 	if (!CHECK_BIT(update,0) || !CHECK_BIT(update,1) || !CHECK_BIT(update,2) || !CHECK_BIT(update,3)){
 		p->velX = FIX14_MULT(p->velX, 0b11111010000000);
 		p->velY = FIX14_MULT(p->velY, 0b11111010000000);
+	}
+
+	if (CHECK_BIT(update,3)){
+			if (p->angle <= -175){
+				p->angle = 180;
+			} else{
+				p->angle -= 1;
+			}
+	}
+		// Check left turn
+	if (CHECK_BIT(update,2)){
+		if (p->angle >= 175){
+			p->angle = -180;
+		} else{
+			p->angle += 1;
+		}
 	}
 
 	p->posX += p->velX;
