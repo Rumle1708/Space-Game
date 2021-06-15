@@ -4,12 +4,13 @@
 #include "LUT.h"
 #include "ansi.h"
 #include "math.h"
-#include "window.h"
 
+// Struct for player
 struct player_t{
 	int32_t posX, posY, velX, velY, angle;
 };
 
+// Initialize player
 void initPlayer(struct player_t *p, int32_t x, int32_t y){
 	p->posX = (x << FIX14_SHIFT);
 	p->posY = (y << FIX14_SHIFT);
@@ -17,6 +18,8 @@ void initPlayer(struct player_t *p, int32_t x, int32_t y){
 	p->velY = 0;
 	p->angle = 0;
 }
+
+// Delete graphical representation of player
 void deletePlayer(struct player_t *p){
 	int32_t x, y;
 	x = approxShift14(p->posX);
@@ -30,6 +33,7 @@ void deletePlayer(struct player_t *p){
 	printf(" ");
 }
 
+// Draws player
 void drawPlayer(struct player_t *p){
 	int32_t x, y;
 	x = approxShift14(p->posX);
@@ -41,6 +45,8 @@ void drawPlayer(struct player_t *p){
 	printf("%c", 0xDB);
 	gotoxy(x,y - 1);
 	printf("%c", 0xDB);
+
+	// Determine direction of player
 	if (-45 < p->angle && p->angle <= 45){
 		gotoxy(x - 1,y);
 		printf(" ");
@@ -56,6 +62,7 @@ void drawPlayer(struct player_t *p){
 	}
 }
 
+// Updates the player according to a user input
 void updatePlayer(struct player_t *p, int32_t update){
 	deletePlayer(p);
 
@@ -97,6 +104,7 @@ void updatePlayer(struct player_t *p, int32_t update){
 	p->posX += p->velX;
 	p->posY += p->velY;
 
+	// Check if player is out of bounds
 	if ((approxShift14(p->posX) > X2 - 4)){
 		p->posX = (X2 - 4) << FIX14_SHIFT;
 		p->velX = 0;
