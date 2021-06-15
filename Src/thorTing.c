@@ -15,6 +15,10 @@
 #define Height 7
 #define Width 10
 
+struct window_t {
+	int32_t x1, y1, x2, y2;
+};
+
 struct gravity {
 	int32_t x, y;
 };
@@ -28,10 +32,9 @@ void drawAsteroid(struct asteroid *a, int32_t x1, int32_t y1, int32_t size1) {
 	(*a).y = y1;
 	(*a).size = size1;
 	for (int i = 0; i <= 360; i++) {
-		gotoxy(approxShift14(sinus(i)*size1)*1.8 + (*a).x, approxShift14(cosinus(i)*size1) + (*a).y);
+		gotoxy(approxShift14(cosinus(i)*size1)*1.8 + (*a).x, approxShift14(sinus(i)*size1) + (*a).y);
 		printf("%s", "o");
 	}
-	FIX14_MULT(4 >> FIX14_SHIFT,3 >> FIX14_SHIFT);
 	(*a).vol = FIX14_MULT(FIX14_MULT(FIX14_DIV(4 >> FIX14_SHIFT,3 >> FIX14_SHIFT),M_PI),FIX14_MULT(FIX14_MULT((*a).size >> FIX14_SHIFT,(*a).size >> FIX14_SHIFT),(*a).size >> FIX14_SHIFT)) << 14;
 } // 4/3*pi*size^3
 
@@ -65,31 +68,36 @@ int collision (struct player_t p, struct asteroid a, struct window_t w) {
 	int32_t i;
 	if (p.posX >= a.x && p.posY <= a.y) { // første kvadrant
 		for (i = 0; i <= 90; i++) {
-			if (p.posX <= approxShift14(sinus(i)*a.size)*1.6 + a.x && p.posY >= approxShift14(cosinus(i)*a.size) + a.y) {
+			if (p.posX <= approxShift14(cosinus(i)*a.size)*1.6 + a.x && p.posY >= approxShift14(sinus(i)*a.size) + a.y) {
 				c = 1;
+				printf("forste kvadrant");
 			}
 		}
 	} else if (p.posX < a.x && p.posY <= a.y) { // anden kvadrant
 		for (i = 90; i <= 180; i++) {
-			if (p.posX >= approxShift14(sinus(i)*a.size)*1.6 + a.x && p.posY >= approxShift14(cosinus(i)*a.size) + a.y) {
+			if (p.posX >= approxShift14(cosinus(i)*a.size)*1.6 + a.x && p.posY >= approxShift14(sinus(i)*a.size) + a.y) {
 				c = 1;
+				printf("anden kvadrant");
 			}
 		}
 	} else if (p.posX < a.x && p.posY > a.y) { // tredje kvadrant
 		for (i = 180; i <= 270; i++) {
-			if (p.posX >= approxShift14(sinus(i)*a.size)*1.6 + a.x && p.posY <= approxShift14(cosinus(i)*a.size) + a.y) {
+			if (p.posX >= approxShift14(cosinus(i)*a.size)*1.6 + a.x && p.posY <= approxShift14(sinus(i)*a.size) + a.y) {
 				c = 1;
+				printf("trejde kvadrant");
 			}
 		}
 	} else { // fjerde kvadrant
 		for (i = 270; i <= 360; i++) {
-			if (p.posX <= approxShift14(sinus(i)*a.size)*1.6 + a.x && p.posY <= approxShift14(cosinus(i)*a.size) + a.y) {
+			if (p.posX <= approxShift14(cosinus(i)*a.size)*1.6 + a.x && p.posY <= approxShift14(sinus(i)*a.size) + a.y) {
 				c = 1;
+				printf("fjerde kvadrant");
 			}
 		}
 	}
 	if (p.posX <= w.x1 || p.posX >= w.x2 || p.posY <= w.y1 || p.posY >= w.y2) {
 		c = 1;
+		printf("udenfor vinduerammer");
 	}
 
 	return c;

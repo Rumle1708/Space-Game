@@ -56,8 +56,7 @@ void drawPlayer(struct player_t *p){
 	}
 }
 
-void updatePlayer(struct player_t *p, int32_t update, struct window_t w){
-
+void updatePlayer(struct player_t *p, int32_t update){
 	deletePlayer(p);
 
 	// Check right turn
@@ -95,22 +94,24 @@ void updatePlayer(struct player_t *p, int32_t update, struct window_t w){
 		p->velY = FIX14_MULT(p->velY, 0b11111010000000);
 	}
 
-
-	if (approxShift14(p->posX) > (w.x2 - 4)){
-		p->posX = (w.x2 - 4) << FIX14_SHIFT;
-		p->velX = 0;
-	} /*
-	else if (approxShift14(p->posX) < w->x1 + 4){
-		p->posX = (w->x1 + 4) << FIX14_SHIFT;
-		p->velX = 0;
-	} */
-
-	else {
-		p->posX += p->velX;
-	}
+	p->posX += p->velX;
 	p->posY += p->velY;
 
+	if ((approxShift14(p->posX) > X2 - 4)){
+		p->posX = (X2 - 4) << FIX14_SHIFT;
+		p->velX = 0;
+	} else if (approxShift14(p->posX) < X1 + 4){
+		p->posX = (X1 + 4) << FIX14_SHIFT;
+		p->velX = 0;
+	} else if (approxShift14(p->posY) > Y2 - 4){
+		p->posY = (Y2 - 4) << FIX14_SHIFT;
+		p->velY = 0;
+	} else if (approxShift14(p->posY) < Y1 + 4){
+		p->posY = (Y1 + 4) << FIX14_SHIFT;
+		p->velY = 0;
+	}
 	drawPlayer(p);
+
 
 	gotoxy(0,0);
 	printf("\nposX: ");
@@ -123,7 +124,6 @@ void updatePlayer(struct player_t *p, int32_t update, struct window_t w){
 	printFix(expand(p->velY));
 	printf("\nangle: ");
 	printf("%ld    ", p->angle);
-	printf("\n Dette er w -> x1: %ld     " , w.x1 + 4);
 }
 
 /*
