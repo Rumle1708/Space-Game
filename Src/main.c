@@ -10,11 +10,19 @@
 #include "timer.h"
 #include "charset.h"
 #include "LCD.h"
-#include "ADC.h"
 #include "player.h"
 #include "math.h"
 #include "main.h"
+#include "projectile.h"
+#include "ADC2.h"
 
+#define X1 1
+#define Y1 1
+#define X2 255
+#define Y2 100
+#define ENTITIES 10
+
+#define ESC 0x1B
 #define FIX14_SHIFT 14
 #define FIX14_MULT(a,b) (((a)*(b)) >> FIX14_SHIFT)
 #define FIX14_DIV(a,b) (((a)<<FIX14_SHIFT)/b)
@@ -26,14 +34,19 @@ int main(void){
 	uart_init(115200);
 	uart_clear();
 	clrscr();
-
-	initADC();
+	// ESC[?25l
+	printf("%c[?%dl", ESC, 25);
 	initIOJoystick();
-	lcd_init();
 	initTimer();
-	// drawWindowNoTitle(1,1,255,127,1);
+	initADC();
+
 	struct player_t p1;
 	initPlayer(&p1, 50, 10);
+
+	struct projectile_t proj[ENTITIES];
+
+	initProjectiles(&proj);
+
 
 	/*
 	void drawWeirdShit(int32_t r){
@@ -57,10 +70,14 @@ int main(void){
 		}
 	}
 	*/
-
 	while(1){
 		if (global == 1){
-			updatePlayer(&p1, getKey());
+			updatePlayer(&p1,joystickApprox(readADC(1),readADC(2)));
+			if (readJoystick() == 16){
+				spawnProjectile(&proj,p1);
+			}
+			updateProjectiles(&proj);
+			fflush(stdout);
 			global = 0;
 		}
 	}

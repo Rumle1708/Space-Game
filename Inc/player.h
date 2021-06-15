@@ -15,5 +15,6 @@ struct player_t{
 void initPlayer(struct player_t *p, int32_t x, int32_t y);
 void updatePlayer(struct player_t *p, int32_t update);
 void drawPlayer(struct player_t *p);
+int32_t joystickApprox(int32_t deg, int32_t throttle);
 
 #endif /* PLAYER_H_ */

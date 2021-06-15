@@ -33,6 +33,28 @@ void deletePlayer(struct player_t *p){
 	printf(" ");
 }
 
+int32_t joystickApprox(int32_t deg, int32_t throttle){
+
+	int32_t out = 0;
+
+	if(throttle > 3000){
+		out ^= 1 << 0;
+	} else if (throttle < 1000){
+		out ^= 1 << 1;
+	}
+
+	if(deg > 3000){
+		out ^= 1 << 2;
+	} else if(deg < 1000){
+		out ^= 1 << 3;
+	}
+
+	return out;
+
+
+
+}
+
 // Draws player
 void drawPlayer(struct player_t *p){
 	int32_t x, y;
@@ -101,6 +123,22 @@ void updatePlayer(struct player_t *p, int32_t update){
 		p->velY = FIX14_MULT(p->velY, 0b11111010000000);
 	}
 
+	if (CHECK_BIT(update,3)){
+			if (p->angle <= -175){
+				p->angle = 180;
+			} else{
+				p->angle -= 1;
+			}
+	}
+		// Check left turn
+	if (CHECK_BIT(update,2)){
+		if (p->angle >= 175){
+			p->angle = -180;
+		} else{
+			p->angle += 1;
+		}
+	}
+
 	p->posX += p->velX;
 	p->posY += p->velY;
 
@@ -132,15 +170,3 @@ void updatePlayer(struct player_t *p, int32_t update){
 	printf("\nangle: ");
 	printf("%ld    ", p->angle);
 }
-
-/*
-void printFix(int32_t i) {
-	// Prints a signed 16.16 fixed point number
-	if ((i & 0x80000000) != 0) { // Handle negative numbers
-		printf("-");
-		i = ~i + 1;
-	}
-	printf("%ld.%04ld", i >> 16, 10000 * (uint32_t)(i & 0xFFFF) >> 16);
-	// Print a maximum of 4 decimal digits to avoid overflow
-}
-*/
