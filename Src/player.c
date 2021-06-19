@@ -10,6 +10,14 @@ struct player_t{
 	int32_t posX, posY, velX, velY, angle;
 };
 
+struct player2_t{
+	int32_t posX, posY, velX, velY, angle;
+	int32_t sprite[5][5];
+};
+
+
+
+
 // Initialize player
 void initPlayer(struct player_t *p, int32_t x, int32_t y){
 	p->posX = (x << FIX14_SHIFT);
@@ -17,7 +25,30 @@ void initPlayer(struct player_t *p, int32_t x, int32_t y){
 	p->velX = 0;
 	p->velY = 0;
 	p->angle = 0;
+
 }
+
+void initPlayer2(struct player2_t *p, int32_t x, int32_t y, int32_t sprite[5][5]){
+	p->posX = (x << FIX14_SHIFT);
+	p->posY = (y << FIX14_SHIFT);
+	p->velX = 0;
+	p->velY = 0;
+	p->angle = 0;
+
+	for(int32_t i = 0; i < 5; i++){
+		for(int32_t j = 0; j < 5; j++){
+
+			p->sprite[i][j] = sprite[i][j];
+
+
+		}
+
+	}
+
+
+
+}
+
 
 // Delete graphical representation of player
 void deletePlayer(struct player_t *p){
@@ -32,6 +63,44 @@ void deletePlayer(struct player_t *p){
 	gotoxy(x,y - 1);
 	printf(" ");
 }
+
+void deletePlayer2(struct player2_t *p){
+
+	/*
+	for(int32_t i = -2; i < 3; i++){
+		for(int32_t j = -2; j < 3; j++){
+
+			gotoxy((i + approxShift14(p->posX)),(j + approxShift14(p->posY)));
+
+			printf(" ");
+
+
+		}
+
+	}
+
+	*/
+	for(int32_t i = 0; i < 5; i++){
+
+			for(int32_t j = 0; j < 5; j++){
+
+				if(p->sprite[i][j] != 0){
+
+					int32_t sprite_x = approxShift14(((cosinus(p->angle) * ((i - 2) << 14)) >> 14) - ((sinus(p->angle) * ((j - 2) << 14)) >> 14));
+
+					int32_t sprite_y = approxShift14(((sinus(p->angle) * ((i - 2) << 14)) >> 14) + ((cosinus(p->angle) * ((j - 2) << 14)) >> 14));
+
+					gotoxy(sprite_x + approxShift14(p->posX), sprite_y + approxShift14(p->posY));
+
+					printf(" ");
+
+
+				}
+			}
+	}
+
+}
+
 
 int32_t joystickApprox(int32_t deg, int32_t throttle){
 
@@ -83,6 +152,36 @@ void drawPlayer(struct player_t *p){
 		printf(" ");
 	}
 }
+
+void drawPlayer2(struct player2_t *p){
+
+	// roterer sprite figuren i forhold til spillerens orientering
+
+
+	for(int32_t i = 0; i < 5; i++){
+
+		for(int32_t j = 0; j < 5; j++){
+
+			if(p->sprite[i][j] != 0){
+
+				int32_t sprite_x = approxShift14(((cosinus(p->angle) * ((i - 2) << 14)) >> 14) - ((sinus(p->angle) * ((j - 2) << 14)) >> 14));
+
+				int32_t sprite_y = approxShift14(((sinus(p->angle) * ((i - 2) << 14)) >> 14) + ((cosinus(p->angle) * ((j - 2) << 14)) >> 14));
+
+				gotoxy(sprite_x + approxShift14(p->posX), sprite_y + approxShift14(p->posY));
+
+				printf("*");
+
+
+			}
+		}
+	}
+
+
+
+
+}
+
 
 // Updates the player according to a user input
 void updatePlayer(struct player_t *p, int32_t update){
@@ -169,4 +268,96 @@ void updatePlayer(struct player_t *p, int32_t update){
 	printFix(expand(p->velY));
 	printf("\nangle: ");
 	printf("%ld    ", p->angle);
+}
+
+void updatePlayer2(struct player2_t *p, int32_t angle, int32_t throttle){
+
+	deletePlayer2(p);
+
+	int32_t temp_angle = ((((angle - 2048) << 14) * (0x0001 << 5)) >> 14);
+	int32_t temp_throttle = ((((throttle - 2048) << 14) * (0x0001 << 1)) >> 15);
+
+
+	// Deadzone på joystick
+
+	if((angle - 2048) > 512 || (angle - 2048) < -512 ){
+
+		p->angle += approxShift14(-temp_angle);
+
+	}
+
+
+	/*
+
+	if (p->angle >= 175){
+		p->angle = -180;
+	} else {
+		p->angle += 5;
+	}
+
+	if (p->angle >= 175){
+		p->angle = -180;
+	} else {
+		p->angle += 1;
+	}
+
+	*/
+
+	if((throttle - 2048) > 512 || (throttle - 2048) < -512){
+
+		p->velX += ((temp_throttle * cosinus(p->angle)) >> 14);
+		p->velY += ((temp_throttle * sinus(p->angle)) >> 14);
+
+
+	} else {
+
+		p->velX = FIX14_MULT(p->velX, 0b11111010000000);
+		p->velY = FIX14_MULT(p->velY, 0b11111010000000);
+
+	}
+
+	/*
+
+
+	if(approxShift14(p->velX) > 5){
+
+		p->velX = 5;
+
+	} else if (approxShift14(p->velX) < -5){
+
+		p->velX = -5;
+
+	}
+
+	if(approxShift14(p->velY) > 5){
+
+		p->velY = 5;
+
+	} else if (approxShift14(p->velY) < -5){
+
+		p->velY = -5;
+
+	}
+
+	*/
+
+	p->posX += p->velX;
+	p->posY += p->velY;
+
+	drawPlayer2(p);
+
+	gotoxy(0,0);
+	printf("\nposX: ");
+	printFix(expand(p->posX));
+	printf("\nposY: ");
+	printFix(expand(p->posY));
+	printf("\nvelX: ");
+	printFix(expand(p->velX));
+	printf("\nvelY: ");
+	printFix(expand(p->velY));
+	printf("\nangle: ");
+	printf("%ld    ", p->angle);
+
+
+
 }

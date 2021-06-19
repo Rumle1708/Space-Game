@@ -13,7 +13,7 @@ struct projectile_t {
 };
 
 void initProjectiles(struct projectile_t *p);
-void spawnProjectile(struct projectile_t *p, struct player_t player);
+void spawnProjectile(struct projectile_t *p, struct player2_t player);
 void updateProjectiles(struct projectile_t *p);
 
 #endif /* PROJECTILE_H_ */

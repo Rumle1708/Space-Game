@@ -43,6 +43,20 @@ int main(void){
 	struct player_t p1;
 	initPlayer(&p1, 50, 10);
 
+	int32_t sprite[5][5] = {
+	{0,1,0,1,0},
+	{1,1,1,1,1},
+	{0,0,1,0,0},
+	{0,0,1,0,0},
+	{0,0,1,0,0}
+	};
+
+
+
+	struct player2_t p2;
+	initPlayer2(&p2, 50 , 10, sprite);
+
+
 	struct projectile_t proj[ENTITIES];
 
 	initProjectiles(&proj);
@@ -72,11 +86,20 @@ int main(void){
 	*/
 	while(1){
 		if (global == 1){
+
+			/*
+
 			updatePlayer(&p1,joystickApprox(readADC(1),readADC(2)));
+
+			*/
+
 			if (readJoystick() == 16){
-				spawnProjectile(&proj,p1);
+				spawnProjectile(&proj,p2);
 			}
 			updateProjectiles(&proj);
+
+			updatePlayer2(&p2, readADC(2), readADC(1));
+
 			fflush(stdout);
 			global = 0;
 		}

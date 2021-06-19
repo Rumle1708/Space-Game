@@ -53,7 +53,7 @@ void updateProjectiles(struct projectile_t *p){
 	}
 }
 
-void spawnProjectile(struct projectile_t *p, struct player_t player){
+void spawnProjectile(struct projectile_t *p, struct player2_t player){
 	for (int32_t i = 0; i < ENTITIES; i++){
 		if(!p[i].alive){
 			p[i].posX = player.posX + (cosinus(player.angle)*2);
