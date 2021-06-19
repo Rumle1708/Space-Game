@@ -15,6 +15,8 @@
 #include "main.h"
 #include "projectile.h"
 #include "ADC2.h"
+#include "powerup.h"
+
 
 #define X1 1
 #define Y1 1
@@ -56,10 +58,13 @@ int main(void){
 	struct player2_t p2;
 	initPlayer2(&p2, 50 , 10, sprite);
 
-
 	struct projectile_t proj[ENTITIES];
 
 	initProjectiles(&proj);
+
+	struct powerup powerup;
+
+	powerupInit(&powerup, 100, 50, 1);
 
 
 	/*
@@ -94,11 +99,14 @@ int main(void){
 			*/
 
 			if (readJoystick() == 16){
-				spawnProjectile(&proj,p2);
+				spawnProjectile(&proj,&p2);
 			}
+
 			updateProjectiles(&proj);
 
 			updatePlayer2(&p2, readADC(2), readADC(1));
+
+			powerupUpdate(&powerup, &p2);
 
 			fflush(stdout);
 			global = 0;

@@ -53,17 +53,132 @@ void updateProjectiles(struct projectile_t *p){
 	}
 }
 
-void spawnProjectile(struct projectile_t *p, struct player2_t player){
+void spawnProjectile(struct projectile_t *p, struct player2_t *player){
+
+	switch(player->shotType){
+	case 0:
+		if(player->shotConstant == 4){
+			for (int32_t i = 0; i < ENTITIES; i++){
+				if(!p[i].alive){
+
+					p[i].posX = player->posX + (cosinus(player->angle)*2);
+					p[i].posY = player->posY + (sinus(player->angle)*2);
+
+					p[i].velX = (cosinus(player->angle)*2);
+					p[i].velY = (sinus(player->angle)*2);
+
+					p[i].alive = 1;
+
+					i = ENTITIES;
+					player->shotConstant = 0;
+
+
+				}
+
+			}
+
+		}
+
+		break;
+
+	case 1:
+
+		if(player->shotConstant == 10){
+			for(int32_t n = 0; n < 5; n++){
+				for (int32_t i = 0; i < ENTITIES; i++){
+					if(!p[i].alive){
+
+						p[i].posX = player->posX + (cosinus(player->angle + ((n - 2) * 15))*2);
+						p[i].posY = player->posY + (sinus(player->angle + ((n - 2) * 15))*2);
+
+						p[i].velX = (cosinus(player->angle + ((n - 2) * 15))*2);
+						p[i].velY = (sinus(player->angle + ((n - 2) * 15))*2);
+
+						p[i].alive = 1;
+
+						i = ENTITIES;
+
+					}
+				}
+
+			}
+
+			player->shotConstant = 0;
+
+		}
+
+		break;
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
 	for (int32_t i = 0; i < ENTITIES; i++){
 		if(!p[i].alive){
-			p[i].posX = player.posX + (cosinus(player.angle)*2);
-			p[i].posY = player.posY + (sinus(player.angle)*2);
 
-			p[i].velX = (cosinus(player.angle)*4);
-			p[i].velY = (sinus(player.angle)*2);
+			switch(player->shotType){
+			case 0:
 
-			p[i].alive = 1;
-			i = ENTITIES;
+				if(player->shotConstant == 2){
+
+					p[i].posX = player->posX + (cosinus(player->angle)*2);
+					p[i].posY = player->posY + (sinus(player->angle)*2);
+
+					p[i].velX = (cosinus(player->angle)*2);
+					p[i].velY = (sinus(player->angle)*2);
+
+					p[i].alive = 1;
+				}
+
+				i = ENTITIES;
+				player->shotConstant = 0;
+
+				break;
+
+			case 1:
+
+				if(player->shotConstant == 4){
+
+					p[i].posX = player->posX + (cosinus(player->angle + (((n - 2) * 15) << 14))*2);
+					p[i].posY = player->posY + (sinus(player->angle + (((n - 2) * 15) << 14))*2);
+
+					p[i].velX = (cosinus(player->angle + (((n - 2) * 15) << 14))*2);
+					p[i].velY = (sinus(player->angle + (((n - 2) * 15) << 14))*2);
+
+					p[i].alive = 1;
+
+					 n--;
+
+					if(n == 0){
+
+						i = ENTITIES;
+						player->shotConstant = 0;
+					}
+
+				} else {
+
+					i = ENTITIES;
+
+				}
+
+				break;
+
+			}
 		}
 	}
+
+	*/
 }

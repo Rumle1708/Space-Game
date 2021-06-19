@@ -11,7 +11,7 @@ struct player_t{
 };
 
 struct player2_t{
-	int32_t posX, posY, velX, velY, angle;
+	int32_t posX, posY, velX, velY, angle, shotType, shotConstant;
 	int32_t sprite[5][5];
 };
 
@@ -34,18 +34,18 @@ void initPlayer2(struct player2_t *p, int32_t x, int32_t y, int32_t sprite[5][5]
 	p->velX = 0;
 	p->velY = 0;
 	p->angle = 0;
+	p->shotType = 0;
+	p->shotConstant = 0;
+
 
 	for(int32_t i = 0; i < 5; i++){
 		for(int32_t j = 0; j < 5; j++){
 
 			p->sprite[i][j] = sprite[i][j];
 
-
 		}
 
 	}
-
-
 
 }
 
@@ -66,7 +66,9 @@ void deletePlayer(struct player_t *p){
 
 void deletePlayer2(struct player2_t *p){
 
+
 	/*
+
 	for(int32_t i = -2; i < 3; i++){
 		for(int32_t j = -2; j < 3; j++){
 
@@ -80,6 +82,10 @@ void deletePlayer2(struct player2_t *p){
 	}
 
 	*/
+
+
+
+
 	for(int32_t i = 0; i < 5; i++){
 
 			for(int32_t j = 0; j < 5; j++){
@@ -98,6 +104,8 @@ void deletePlayer2(struct player2_t *p){
 				}
 			}
 	}
+
+
 
 }
 
@@ -278,7 +286,7 @@ void updatePlayer2(struct player2_t *p, int32_t angle, int32_t throttle){
 	int32_t temp_throttle = ((((throttle - 2048) << 14) * (0x0001 << 1)) >> 15);
 
 
-	// Deadzone på joystick
+	// Joystick deadzone
 
 	if((angle - 2048) > 512 || (angle - 2048) < -512 ){
 
@@ -303,10 +311,18 @@ void updatePlayer2(struct player2_t *p, int32_t angle, int32_t throttle){
 
 	*/
 
-	if((throttle - 2048) > 512 || (throttle - 2048) < -512){
+	if((throttle - 2048) > 512){
 
 		p->velX += ((temp_throttle * cosinus(p->angle)) >> 14);
 		p->velY += ((temp_throttle * sinus(p->angle)) >> 14);
+
+
+	} else if((throttle - 2048) < -1536){
+
+		// Breaking
+
+		p->velX = FIX14_MULT(p->velX, 0b11100000000000);
+		p->velY = FIX14_MULT(p->velY, 0b11100000000000);
 
 
 	} else {
@@ -340,6 +356,16 @@ void updatePlayer2(struct player2_t *p, int32_t angle, int32_t throttle){
 	}
 
 	*/
+
+	if((p->shotType == 0) && p->shotConstant < 4){
+
+		p->shotConstant++;
+
+	} else if((p->shotType == 1) && p->shotConstant < 10){
+
+		p->shotConstant++;
+
+	}
 
 	p->posX += p->velX;
 	p->posY += p->velY;
