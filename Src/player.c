@@ -361,6 +361,21 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
 
 
+	} else {
+
+		for(int32_t i = 0; i < 5; i++){
+
+			for(int32_t j = 0; j < 5; j++){
+
+				gotoxy(i-2, j-2);
+
+				printf("");
+
+			}
+
+		}
+
+
 	}
 
 }

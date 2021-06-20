@@ -33,7 +33,7 @@
 
 int main(void){
 	// Initialization
-	uart_init(115200);
+	uart_init(2000000);
 	uart_clear();
 	clrscr();
 	// ESC[?25l
@@ -52,11 +52,11 @@ int main(void){
 
 	struct player2_t p1;
 
-	//struct player2_t p2;
+	struct player2_t p2;
 
 	initPlayer(&p1, 50, 10, 0, sprite);
 
-	//initPlayer(&p2, 200 , 50, -180, sprite);
+	initPlayer(&p2, 200 , 50, -180, sprite);
 
 	struct projectile_t proj[ENTITIES];
 
@@ -115,7 +115,7 @@ int main(void){
 
 			updatePlayer(&p1, readADC(2), readADC(1));
 
-			//updatePlayer(&p2, 2048, 2048);
+			updatePlayer(&p2, 2048, 2048);
 
 			powerupUpdate(&powerup, &p1);
 
@@ -123,7 +123,7 @@ int main(void){
 
 			impactDetection(&p1, &proj);
 
-			//impactDetection(&p2, &proj);
+			impactDetection(&p2, &proj);
 
 
 			fflush(stdout);
