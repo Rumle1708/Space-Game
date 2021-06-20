@@ -231,7 +231,7 @@ void updatePlayer(struct player_t *p, int32_t update){
 
 void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
-	deletePlayer2(p);
+	deletePlayer(p);
 
 	int32_t temp_angle = ((((angle - 2048) << 14) * (0x0001 << 5)) >> 14);
 	int32_t temp_throttle = ((((throttle - 2048) << 14) * (0x0001 << 1)) >> 15);
@@ -321,7 +321,7 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 	p->posX += p->velX;
 	p->posY += p->velY;
 
-	drawPlayer2(p);
+	drawPlayer(p);
 
 	gotoxy(0,0);
 	printf("\nposX: ");

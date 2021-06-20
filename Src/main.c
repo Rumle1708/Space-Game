@@ -62,7 +62,7 @@ int main(void){
 	// struct player2_t p2;
 
 
-	initPlayer(&p1, 50 , 10, 0, sprite);
+	initPlayer(&p1, 50, 10, 0, sprite);
 
 	// initPlayer(&p2, 200 , 50, -180, sprite);
 
