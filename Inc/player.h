@@ -13,7 +13,7 @@ struct player_t{
 };
 
 struct player2_t{
-	int32_t posX, posY, velX, velY, angle, shotType, shotConstant;
+	int32_t posX, posY, velX, velY, angle, shotType, shotConstant, sector, lives;
 	int32_t sprite[5][5];
 };
 

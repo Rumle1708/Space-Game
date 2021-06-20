@@ -11,7 +11,7 @@ struct player_t{
 };
 
 struct player2_t{
-	int32_t posX, posY, velX, velY, angle, shotType, shotConstant;
+	int32_t posX, posY, velX, velY, angle, shotType, shotConstant, sector, lives;
 	int32_t sprite[5][5];
 };
 
@@ -24,6 +24,7 @@ void initPlayer(struct player2_t *p, int32_t x, int32_t y, int32_t angle, int32_
 	p->angle = angle;
 	p->shotType = 0;
 	p->shotConstant = 0;
+	p->lives = 3;
 
 
 	for(int32_t i = 0; i < 5; i++){
@@ -233,108 +234,117 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
 	deletePlayer(p);
 
-	int32_t temp_angle = ((((angle - 2048) << 14) * (0x0001 << 5)) >> 14);
-	int32_t temp_throttle = ((((throttle - 2048) << 14) * (0x0001 << 1)) >> 15);
+	if(!(p->lives <= 0)){
+
+		int32_t temp_angle = ((((angle - 2048) << 14) * (0x0001 << 5)) >> 14);
+			int32_t temp_throttle = ((((throttle - 2048) << 14) * (0x0001 << 1)) >> 16);
 
 
-	// Joystick deadzone
+			// Joystick deadzone
 
-	if((angle - 2048) > 512 || (angle - 2048) < -512 ){
+			if((angle - 2048) > 512 || (angle - 2048) < -512 ){
 
-		p->angle += approxShift14(-temp_angle);
+				p->angle += approxShift14(-temp_angle);
+
+			}
+
+
+			/*
+
+			if (p->angle >= 175){
+				p->angle = -180;
+			} else {
+				p->angle += 5;
+			}
+
+			if (p->angle >= 175){
+				p->angle = -180;
+			} else {
+				p->angle += 1;
+			}
+
+			*/
+
+			if((throttle - 2048) > 512){
+
+				p->velX += ((temp_throttle * cosinus(p->angle)) >> 14);
+				p->velY += ((temp_throttle * sinus(p->angle)) >> 14);
+
+
+			} else if((throttle - 2048) < -1536){
+
+				// Breaking
+
+				p->velX = FIX14_MULT(p->velX, 0b11100000000000);
+				p->velY = FIX14_MULT(p->velY, 0b11100000000000);
+
+
+			} else {
+
+				p->velX = FIX14_MULT(p->velX, 0b11111010000000);
+				p->velY = FIX14_MULT(p->velY, 0b11111010000000);
+
+			}
+
+			/*
+
+
+			if(approxShift14(p->velX) > 5){
+
+				p->velX = 5;
+
+			} else if (approxShift14(p->velX) < -5){
+
+				p->velX = -5;
+
+			}
+
+			if(approxShift14(p->velY) > 5){
+
+				p->velY = 5;
+
+			} else if (approxShift14(p->velY) < -5){
+
+				p->velY = -5;
+
+			}
+
+			*/
+
+			if((p->shotType == 0) && p->shotConstant < 4){
+
+				p->shotConstant++;
+
+			} else if((p->shotType == 1) && p->shotConstant < 10){
+
+				p->shotConstant++;
+
+			}
+
+			p->posX += p->velX;
+			p->posY += p->velY;
+
+			p->sector = (approxShift14(p->posX) / 7) + ((approxShift14(p->posY) / 7) * 35);
+
+
+			drawPlayer(p);
+
+			gotoxy(0,0);
+			printf("\nposX: ");
+			printFix(expand(p->posX));
+			printf("\nposY: ");
+			printFix(expand(p->posY));
+			printf("\nvelX: ");
+			printFix(expand(p->velX));
+			printf("\nvelY: ");
+			printFix(expand(p->velY));
+			printf("\nangle: ");
+			printf("%ld    ", p->angle);
+			printf("\nlives: ");
+			printf("%ld    ", p->lives);
+
+
 
 	}
-
-
-	/*
-
-	if (p->angle >= 175){
-		p->angle = -180;
-	} else {
-		p->angle += 5;
-	}
-
-	if (p->angle >= 175){
-		p->angle = -180;
-	} else {
-		p->angle += 1;
-	}
-
-	*/
-
-	if((throttle - 2048) > 512){
-
-		p->velX += ((temp_throttle * cosinus(p->angle)) >> 14);
-		p->velY += ((temp_throttle * sinus(p->angle)) >> 14);
-
-
-	} else if((throttle - 2048) < -1536){
-
-		// Breaking
-
-		p->velX = FIX14_MULT(p->velX, 0b11100000000000);
-		p->velY = FIX14_MULT(p->velY, 0b11100000000000);
-
-
-	} else {
-
-		p->velX = FIX14_MULT(p->velX, 0b11111010000000);
-		p->velY = FIX14_MULT(p->velY, 0b11111010000000);
-
-	}
-
-	/*
-
-
-	if(approxShift14(p->velX) > 5){
-
-		p->velX = 5;
-
-	} else if (approxShift14(p->velX) < -5){
-
-		p->velX = -5;
-
-	}
-
-	if(approxShift14(p->velY) > 5){
-
-		p->velY = 5;
-
-	} else if (approxShift14(p->velY) < -5){
-
-		p->velY = -5;
-
-	}
-
-	*/
-
-	if((p->shotType == 0) && p->shotConstant < 4){
-
-		p->shotConstant++;
-
-	} else if((p->shotType == 1) && p->shotConstant < 10){
-
-		p->shotConstant++;
-
-	}
-
-	p->posX += p->velX;
-	p->posY += p->velY;
-
-	drawPlayer(p);
-
-	gotoxy(0,0);
-	printf("\nposX: ");
-	printFix(expand(p->posX));
-	printf("\nposY: ");
-	printFix(expand(p->posY));
-	printf("\nvelX: ");
-	printFix(expand(p->velX));
-	printf("\nvelY: ");
-	printFix(expand(p->velY));
-	printf("\nangle: ");
-	printf("%ld    ", p->angle);
-
-
 
 }

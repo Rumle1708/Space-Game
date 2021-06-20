@@ -20,7 +20,7 @@
 
 #define X1 1
 #define Y1 1
-#define X2 255
+#define X2 245
 #define Y2 100
 #define ENTITIES 10
 
@@ -42,11 +42,6 @@ int main(void){
 	initTimer();
 	initADC();
 
-	// struct player_t p1;
-
-
-	// initPlayer(&p1, 50, 10);
-
 	int32_t sprite[5][5] = {
 	{0,1,0,1,0},
 	{1,1,1,1,1},
@@ -55,17 +50,13 @@ int main(void){
 	{0,0,1,0,0}
 	};
 
-
-
 	struct player2_t p1;
 
-	// struct player2_t p2;
-
+	//struct player2_t p2;
 
 	initPlayer(&p1, 50, 10, 0, sprite);
 
-	// initPlayer(&p2, 200 , 50, -180, sprite);
-
+	//initPlayer(&p2, 200 , 50, -180, sprite);
 
 	struct projectile_t proj[ENTITIES];
 
@@ -124,11 +115,16 @@ int main(void){
 
 			updatePlayer(&p1, readADC(2), readADC(1));
 
-			//updatePlayer(&p2, readADC(3), readADC(1));
+			//updatePlayer(&p2, 2048, 2048);
 
 			powerupUpdate(&powerup, &p1);
 
 			//powerupUpdate(&powerup, &p2);
+
+			impactDetection(&p1, &proj);
+
+			//impactDetection(&p2, &proj);
+
 
 			fflush(stdout);
 			global = 0;
