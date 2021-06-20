@@ -42,8 +42,10 @@ int main(void){
 	initTimer();
 	initADC();
 
-	struct player_t p1;
-	initPlayer(&p1, 50, 10);
+	// struct player_t p1;
+
+
+	// initPlayer(&p1, 50, 10);
 
 	int32_t sprite[5][5] = {
 	{0,1,0,1,0},
@@ -55,8 +57,15 @@ int main(void){
 
 
 
-	struct player2_t p2;
-	initPlayer2(&p2, 50 , 10, sprite);
+	struct player2_t p1;
+
+	// struct player2_t p2;
+
+
+	initPlayer(&p1, 50 , 10, 0, sprite);
+
+	// initPlayer(&p2, 200 , 50, -180, sprite);
+
 
 	struct projectile_t proj[ENTITIES];
 
@@ -99,14 +108,27 @@ int main(void){
 			*/
 
 			if (readJoystick() == 16){
+				spawnProjectile(&proj,&p1);
+			}
+
+			/*
+
+			if (player 2 shot){
 				spawnProjectile(&proj,&p2);
 			}
 
+
+			*/
+
 			updateProjectiles(&proj);
 
-			updatePlayer2(&p2, readADC(2), readADC(1));
+			updatePlayer(&p1, readADC(2), readADC(1));
 
-			powerupUpdate(&powerup, &p2);
+			//updatePlayer(&p2, readADC(3), readADC(1));
+
+			powerupUpdate(&powerup, &p1);
+
+			//powerupUpdate(&powerup, &p2);
 
 			fflush(stdout);
 			global = 0;

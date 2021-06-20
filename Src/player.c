@@ -16,24 +16,12 @@ struct player2_t{
 };
 
 
-
-
-// Initialize player
-void initPlayer(struct player_t *p, int32_t x, int32_t y){
+void initPlayer(struct player2_t *p, int32_t x, int32_t y, int32_t angle, int32_t sprite[5][5]){
 	p->posX = (x << FIX14_SHIFT);
 	p->posY = (y << FIX14_SHIFT);
 	p->velX = 0;
 	p->velY = 0;
-	p->angle = 0;
-
-}
-
-void initPlayer2(struct player2_t *p, int32_t x, int32_t y, int32_t sprite[5][5]){
-	p->posX = (x << FIX14_SHIFT);
-	p->posY = (y << FIX14_SHIFT);
-	p->velX = 0;
-	p->velY = 0;
-	p->angle = 0;
+	p->angle = angle;
 	p->shotType = 0;
 	p->shotConstant = 0;
 
@@ -50,63 +38,25 @@ void initPlayer2(struct player2_t *p, int32_t x, int32_t y, int32_t sprite[5][5]
 }
 
 
-// Delete graphical representation of player
-void deletePlayer(struct player_t *p){
-	int32_t x, y;
-	x = approxShift14(p->posX);
-	y = approxShift14(p->posY);
-	fgcolor(15);
-	gotoxy(x - 1,y);
-	printf("   ");
-	gotoxy(x,y + 1);
-	printf(" ");
-	gotoxy(x,y - 1);
-	printf(" ");
-}
-
-void deletePlayer2(struct player2_t *p){
-
-
-	/*
-
-	for(int32_t i = -2; i < 3; i++){
-		for(int32_t j = -2; j < 3; j++){
-
-			gotoxy((i + approxShift14(p->posX)),(j + approxShift14(p->posY)));
-
-			printf(" ");
-
-
-		}
-
-	}
-
-	*/
-
-
-
+void deletePlayer(struct player2_t *p){
 
 	for(int32_t i = 0; i < 5; i++){
 
-			for(int32_t j = 0; j < 5; j++){
+		for(int32_t j = 0; j < 5; j++){
 
-				if(p->sprite[i][j] != 0){
+			if(p->sprite[i][j] != 0){
+				int32_t sprite_x = approxShift14(((cosinus(p->angle) * ((i - 2) << 14)) >> 14) - ((sinus(p->angle) * ((j - 2) << 14)) >> 14));
 
-					int32_t sprite_x = approxShift14(((cosinus(p->angle) * ((i - 2) << 14)) >> 14) - ((sinus(p->angle) * ((j - 2) << 14)) >> 14));
+				int32_t sprite_y = approxShift14(((sinus(p->angle) * ((i - 2) << 14)) >> 14) + ((cosinus(p->angle) * ((j - 2) << 14)) >> 14));
 
-					int32_t sprite_y = approxShift14(((sinus(p->angle) * ((i - 2) << 14)) >> 14) + ((cosinus(p->angle) * ((j - 2) << 14)) >> 14));
+				gotoxy(sprite_x + approxShift14(p->posX), sprite_y + approxShift14(p->posY));
 
-					gotoxy(sprite_x + approxShift14(p->posX), sprite_y + approxShift14(p->posY));
-
-					printf(" ");
+				printf(" ");
 
 
-				}
 			}
+		}
 	}
-
-
-
 }
 
 
@@ -128,9 +78,9 @@ int32_t joystickApprox(int32_t deg, int32_t throttle){
 
 	return out;
 
-
-
 }
+
+/*
 
 // Draws player
 void drawPlayer(struct player_t *p){
@@ -161,7 +111,9 @@ void drawPlayer(struct player_t *p){
 	}
 }
 
-void drawPlayer2(struct player2_t *p){
+*/
+
+void drawPlayer(struct player2_t *p){
 
 	// roterer sprite figuren i forhold til spillerens orientering
 
@@ -184,12 +136,9 @@ void drawPlayer2(struct player2_t *p){
 			}
 		}
 	}
-
-
-
-
 }
 
+/*
 
 // Updates the player according to a user input
 void updatePlayer(struct player_t *p, int32_t update){
@@ -278,7 +227,9 @@ void updatePlayer(struct player_t *p, int32_t update){
 	printf("%ld    ", p->angle);
 }
 
-void updatePlayer2(struct player2_t *p, int32_t angle, int32_t throttle){
+*/
+
+void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
 	deletePlayer2(p);
 
