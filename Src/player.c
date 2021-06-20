@@ -324,6 +324,22 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 			p->posX += p->velX;
 			p->posY += p->velY;
 
+			// Check if player is out of bounds
+			if ((approxShift14(p->posX) > X2 - 4)){
+				p->posX = (X2 - 4) << FIX14_SHIFT;
+				p->velX = 0;
+			} else if (approxShift14(p->posX) < X1 + 4){
+				p->posX = (X1 + 4) << FIX14_SHIFT;
+				p->velX = 0;
+			} else if (approxShift14(p->posY) > Y2 - 4){
+				p->posY = (Y2 - 4) << FIX14_SHIFT;
+				p->velY = 0;
+			} else if (approxShift14(p->posY) < Y1 + 4){
+				p->posY = (Y1 + 4) << FIX14_SHIFT;
+				p->velY = 0;
+			}
+
+
 			p->sector = (approxShift14(p->posX) / 7) + ((approxShift14(p->posY) / 7) * 35);
 
 
