@@ -6,17 +6,14 @@
 #include "math.h"
 
 // Struct for player
-struct player_t{
-	int32_t posX, posY, velX, velY, angle;
-};
 
 struct player2_t{
-	int32_t posX, posY, velX, velY, angle, shotType, shotConstant, sector, lives;
+	int32_t posX, posY, velX, velY, angle, shotType, shotConstant, lives, color;
 	int32_t sprite[5][5];
 };
 
 
-void initPlayer(struct player2_t *p, int32_t x, int32_t y, int32_t angle, int32_t sprite[5][5]){
+void initPlayer(struct player2_t *p, int32_t x, int32_t y, int32_t angle, int32_t sprite[5][5], int32_t color){
 	p->posX = (x << FIX14_SHIFT);
 	p->posY = (y << FIX14_SHIFT);
 	p->velX = 0;
@@ -25,6 +22,7 @@ void initPlayer(struct player2_t *p, int32_t x, int32_t y, int32_t angle, int32_
 	p->shotType = 0;
 	p->shotConstant = 0;
 	p->lives = 3;
+	p->color = color;
 
 
 	for(int32_t i = 0; i < 5; i++){
@@ -81,43 +79,13 @@ int32_t joystickApprox(int32_t deg, int32_t throttle){
 
 }
 
-/*
-
-// Draws player
-void drawPlayer(struct player_t *p){
-	int32_t x, y;
-	x = approxShift14(p->posX);
-	y = approxShift14(p->posY);
-	fgcolor(15);
-	gotoxy(x - 1,y);
-	printf("%c%c%c", 0xDB, 0xDB, 0xDB);
-	gotoxy(x,y + 1);
-	printf("%c", 0xDB);
-	gotoxy(x,y - 1);
-	printf("%c", 0xDB);
-
-	// Determine direction of player
-	if (-45 < p->angle && p->angle <= 45){
-		gotoxy(x - 1,y);
-		printf(" ");
-	} else if(45 < p->angle && p->angle <= 135){
-		gotoxy(x,y - 1);
-		printf(" ");
-	} else if ((135 < p->angle && p->angle <= 180) || (-135 > p->angle && p->angle >= -180)){
-		gotoxy(x + 1,y);
-		printf(" ");
-	} else {
-		gotoxy(x,y + 1);
-		printf(" ");
-	}
-}
-
-*/
 
 void drawPlayer(struct player2_t *p){
 
 	// roterer sprite figuren i forhold til spillerens orientering
 
+
+	fgcolor(p->color);
 
 	for(int32_t i = 0; i < 5; i++){
 
@@ -131,104 +99,17 @@ void drawPlayer(struct player2_t *p){
 
 				gotoxy(sprite_x + approxShift14(p->posX), sprite_y + approxShift14(p->posY));
 
-				printf("*");
+				printf("■");
 
 
 			}
 		}
 	}
+
+	fgcolor(0);
 }
 
-/*
 
-// Updates the player according to a user input
-void updatePlayer(struct player_t *p, int32_t update){
-	deletePlayer(p);
-
-	// Check right turn
-	if (CHECK_BIT(update,3)){
-		if (p->angle <= -175){
-			p->angle = 180;
-		} else{
-			p->angle -= 5;
-		}
-	}
-
-	// Check left turn
-	if (CHECK_BIT(update,2)){
-		if (p->angle >= 175){
-			p->angle = -180;
-		} else{
-			p->angle += 5;
-		}
-	}
-
-	// Check forward
-	if (CHECK_BIT(update,0)){
-		p->velX += cosinus(p->angle) >> 4;
-		p->velY += sinus(p->angle) >> 5;
-	}
-
-	// Check backwards
-	if (CHECK_BIT(update,1)){
-		p->velX -= cosinus(p->angle) >> 4;
-		p->velY -= sinus(p->angle) >> 5;
-	}
-
-	if (!CHECK_BIT(update,0) || !CHECK_BIT(update,1) || !CHECK_BIT(update,2) || !CHECK_BIT(update,3)){
-		p->velX = FIX14_MULT(p->velX, 0b11111010000000);
-		p->velY = FIX14_MULT(p->velY, 0b11111010000000);
-	}
-
-	if (CHECK_BIT(update,3)){
-			if (p->angle <= -175){
-				p->angle = 180;
-			} else{
-				p->angle -= 1;
-			}
-	}
-		// Check left turn
-	if (CHECK_BIT(update,2)){
-		if (p->angle >= 175){
-			p->angle = -180;
-		} else{
-			p->angle += 1;
-		}
-	}
-
-	p->posX += p->velX;
-	p->posY += p->velY;
-
-	// Check if player is out of bounds
-	if ((approxShift14(p->posX) > X2 - 4)){
-		p->posX = (X2 - 4) << FIX14_SHIFT;
-		p->velX = 0;
-	} else if (approxShift14(p->posX) < X1 + 4){
-		p->posX = (X1 + 4) << FIX14_SHIFT;
-		p->velX = 0;
-	} else if (approxShift14(p->posY) > Y2 - 4){
-		p->posY = (Y2 - 4) << FIX14_SHIFT;
-		p->velY = 0;
-	} else if (approxShift14(p->posY) < Y1 + 4){
-		p->posY = (Y1 + 4) << FIX14_SHIFT;
-		p->velY = 0;
-	}
-	drawPlayer(p);
-
-	gotoxy(0,0);
-	printf("\nposX: ");
-	printFix(expand(p->posX));
-	printf("\nposY: ");
-	printFix(expand(p->posY));
-	printf("\nvelX: ");
-	printFix(expand(p->velX));
-	printf("\nvelY: ");
-	printFix(expand(p->velY));
-	printf("\nangle: ");
-	printf("%ld    ", p->angle);
-}
-
-*/
 
 void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
@@ -248,23 +129,6 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
 			}
 
-
-			/*
-
-			if (p->angle >= 175){
-				p->angle = -180;
-			} else {
-				p->angle += 5;
-			}
-
-			if (p->angle >= 175){
-				p->angle = -180;
-			} else {
-				p->angle += 1;
-			}
-
-			*/
-
 			if((throttle - 2048) > 512){
 
 				p->velX += ((temp_throttle * cosinus(p->angle)) >> 14);
@@ -281,41 +145,24 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
 			} else {
 
+				/*
+
 				p->velX = FIX14_MULT(p->velX, 0b11111010000000);
 				p->velY = FIX14_MULT(p->velY, 0b11111010000000);
 
-			}
-
-			/*
-
-
-			if(approxShift14(p->velX) > 5){
-
-				p->velX = 5;
-
-			} else if (approxShift14(p->velX) < -5){
-
-				p->velX = -5;
+				*/
 
 			}
-
-			if(approxShift14(p->velY) > 5){
-
-				p->velY = 5;
-
-			} else if (approxShift14(p->velY) < -5){
-
-				p->velY = -5;
-
-			}
-
-			*/
 
 			if((p->shotType == 0) && p->shotConstant < 4){
 
 				p->shotConstant++;
 
 			} else if((p->shotType == 1) && p->shotConstant < 10){
+
+				p->shotConstant++;
+
+			} else if((p->shotType == 2) && p->shotConstant < 2){
 
 				p->shotConstant++;
 
@@ -339,12 +186,10 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 				p->velY = 0;
 			}
 
-
-			p->sector = (approxShift14(p->posX) / 7) + ((approxShift14(p->posY) / 7) * 35);
-
-
 			drawPlayer(p);
 
+			/*
+s
 			gotoxy(0,0);
 			printf("\nposX: ");
 			printFix(expand(p->posX));
@@ -359,6 +204,7 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 			printf("\nlives: ");
 			printf("%ld    ", p->lives);
 
+			*/
 
 
 	} else {

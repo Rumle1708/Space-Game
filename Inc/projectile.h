@@ -10,7 +10,7 @@
 #define ENTITIES 10
 
 struct projectile_t {
-	int32_t posX, posY, velX, velY, alive, time, sector;
+	int32_t posX, posY, velX, velY, alive, time;
 };
 
 void initProjectiles(struct projectile_t *p);

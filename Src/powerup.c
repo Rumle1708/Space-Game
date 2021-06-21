@@ -26,10 +26,33 @@ void powerupInit(struct powerup *powerup, int32_t x, int32_t y, int32_t power){
 	powerup->power = power;
 	powerup->alive = 1;
 
-	gotoxy(x,y);
 
-	printf("█");
+	switch(powerup->power){
+		case 1:
+			fgcolor(11);
+			break;
+		case 2:
+			fgcolor(6);
+			break;
+	}
 
+	gotoxy(x-1,y);
+
+	printf("#");
+
+	gotoxy(x,y+1);
+
+	printf("#");
+
+	gotoxy(x+1,y);
+
+	printf("#");
+
+	gotoxy(x,y-1);
+
+	printf("#");
+
+	fgcolor(0);
 
 }
 
@@ -37,10 +60,34 @@ void powerupUpdate(struct powerup *powerup, struct player2_t *player){
 
 	if(((powerup->x + 10) >= approxShift14(player->posX)) && ((powerup->x - 10) <= approxShift14(player->posX)) && ((powerup->y + 10) >= approxShift14(player->posY)) && ((powerup->y - 10) <= approxShift14(player->posY)) && (powerup->alive == 1)){
 
-		player->shotType = 1;
+		player->shotType = powerup->power;
 
 		powerup->alive = 0;
 
+		gotoxy(powerup->x-1,powerup->y);
+
+		printf(" ");
+
+		gotoxy(powerup->x,powerup->y+1);
+
+		printf(" ");
+
+		gotoxy(powerup->x+1,powerup->y);
+
+		printf(" ");
+
+		gotoxy(powerup->x,powerup->y-1);
+
+		printf(" ");
+
+		fgcolor(0);
+
+
 	}
+
+
+
+
+
 
 }

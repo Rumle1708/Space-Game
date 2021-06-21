@@ -73,6 +73,27 @@ void initIOLED(){
 	GPIOA->ODR &= ~(0x0001 << 9);
 }
 
+
+void initSwitches(){
+
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOA; // Enable clock for GPIO Port A
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOC; // Enable clock for GPIO Port C
+
+	// C0 right
+	GPIOA->MODER &= ~(0x00000003 << (5 * 2));
+	GPIOA->MODER |= (0x00000000 << (5 * 2));
+
+	//uint16_t val = GPIOC->IDR & (0x0001 << 0);
+
+	// C1 left
+	GPIOC->MODER &= ~(0x00000003 << (4 * 2));
+	GPIOC->MODER |= (0x00000000 << (4 * 2));
+
+}
+
+
+
+
 int8_t readJoystick(){
 	int8_t C, U, D, L, R, IO = 0;;
 	U = (GPIOA->IDR & (0x0001 << 4));
@@ -107,6 +128,34 @@ int8_t readJoystick(){
 	}
 	return IO;
 }
+
+int32_t readSwitches(){
+
+	int32_t p1, p2, out;
+
+	out = 0;
+
+	p1 = (GPIOA->IDR & (0x0001 << 5));
+	p2 = (GPIOC->IDR & (0x0001 << 4));
+
+	if(p1 != 0){
+
+		out += 1;
+
+	}
+
+	if(p2 != 0){
+
+		out += 2;
+
+	}
+
+	out ^= 0x0003;
+
+	return out;
+
+}
+
 
 void setLED(int8_t R, int8_t G, int8_t B){
 	if(R == 0){

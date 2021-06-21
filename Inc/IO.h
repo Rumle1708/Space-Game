@@ -10,7 +10,10 @@
 
 void initIOJoystick();
 void initIOLED();
+void initSwitches();
 int32_t readJoystick();
+int32_t readSwitches();
+
 void setLED(int32_t R, int32_t G, int32_t B);
 int32_t getKey();
 

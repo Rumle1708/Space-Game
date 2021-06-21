@@ -16,7 +16,7 @@
 #include "projectile.h"
 #include "ADC2.h"
 #include "powerup.h"
-
+#include "thorTing.h"
 
 #define X1 1
 #define Y1 1
@@ -38,7 +38,10 @@ int main(void){
 	clrscr();
 	// ESC[?25l
 	printf("%c[?%dl", ESC, 25);
-	initIOJoystick();
+	//initIOJoystick();
+
+	initSwitches();
+
 	initTimer();
 	initADC();
 
@@ -54,17 +57,24 @@ int main(void){
 
 	struct player2_t p2;
 
-	initPlayer(&p1, 50, 10, 0, sprite);
+	struct asteroid asteroid;
 
-	initPlayer(&p2, 200 , 50, -180, sprite);
+	//drawAsteroid(&asteroid, 100, 50, 20);
+
+	initPlayer(&p1, 50, 10, 0, sprite, 2);
+
+	initPlayer(&p2, 200 , 50, -180, sprite, 4);
 
 	struct projectile_t proj[ENTITIES];
 
 	initProjectiles(&proj);
 
-	struct powerup powerup;
+	struct powerup powerup1, powerup2;
 
-	powerupInit(&powerup, 100, 50, 1);
+	powerupInit(&powerup1, 100, 50, 1);
+
+	powerupInit(&powerup2, 150, 20, 2);
+
 
 
 	/*
@@ -92,39 +102,39 @@ int main(void){
 	while(1){
 		if (global == 1){
 
-			/*
+			int32_t switches = readSwitches();
 
-			updatePlayer(&p1,joystickApprox(readADC(1),readADC(2)));
+			gotoxy(0,10);
 
-			*/
+			printf("%d", switches);
 
-			if (readJoystick() == 16){
+			if (switches == 3 || switches == 1){
 				spawnProjectile(&proj,&p1);
 			}
 
-			/*
-
-			if (player 2 shot){
+			if (switches == 2 || switches == 3){
 				spawnProjectile(&proj,&p2);
 			}
 
-
-			*/
-
 			updateProjectiles(&proj);
+
+			//gravity(&p1, asteroid);
 
 			updatePlayer(&p1, readADC(2), readADC(1));
 
-			updatePlayer(&p2, 2048, 2048);
+			updatePlayer(&p2, readADC(4), readADC(3));
 
-			powerupUpdate(&powerup, &p1);
+			powerupUpdate(&powerup1, &p1);
 
-			//powerupUpdate(&powerup, &p2);
+			powerupUpdate(&powerup2, &p1);
+
+			powerupUpdate(&powerup1, &p2);
+
+			powerupUpdate(&powerup2, &p2);
 
 			impactDetection(&p1, &proj);
 
 			impactDetection(&p2, &proj);
-
 
 			fflush(stdout);
 			global = 0;
