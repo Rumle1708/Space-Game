@@ -13,9 +13,8 @@
 #include "thorTing.h"
 #include "string.h"
 
-/*
-
 void drawAsteroid(struct asteroid *a, int32_t x1, int32_t y1, int32_t size1) {
+	fgcolor(15);
 		(*a).x = x1;
 		(*a).y = y1;
 		(*a).size = size1;
@@ -23,17 +22,26 @@ void drawAsteroid(struct asteroid *a, int32_t x1, int32_t y1, int32_t size1) {
 			gotoxy(approxShift14(cosinus(i)*size1)*1.8 + (*a).x, approxShift14(sinus(i)*size1) + (*a).y);
 			printf("%s", "o");
 		}
-		(*a).vol = ((M_PI * 4 / 3 * size1 * size1 * size1) >> 14);
+		(*a).vol = ((M_PI * 4 / 3 * size1 * size1 * size1)) >> 14;
+	fgcolor(0);
 }
 
 void gravity (struct player2_t *p, struct asteroid a) {
-	const int gravityConst = (4 << FIX14_SHIFT) / 10; //Tweekes til passende tyngdekraft
+
+	fgcolor(15);
+
+	const int gravityConst = (1 << FIX14_SHIFT) / 200; //Tweekes til passende tyngdekraft
 	int32_t lang, kort;
 	// x og y-koordinater fra spiller til asteroide
-	int32_t distX = (a.x << FIX14_SHIFT) - p->posX;
-	int32_t distY = (a.y << FIX14_SHIFT) - p->posY;
-	if (distX < 0) distX *= -1;
-	if (distY < 0) distY *= -1;
+	int32_t distX = ((a.x << FIX14_SHIFT) - (*p).posX);
+	int32_t distY = ((a.y << FIX14_SHIFT) - (*p).posY);
+
+	int32_t tempX = distX;
+	int32_t tempY = distY;
+
+	if (tempX < 0) distX *= -1;
+	if (tempY < 0) distY *= -1;
+
 	if (distX > distY) {
 		lang = distX;
 		kort = distY;
@@ -41,39 +49,27 @@ void gravity (struct player2_t *p, struct asteroid a) {
 		kort = distX;
 		lang = distY;
 	}
-	int32_t distTotal = (lang * 7 / 8 + kort / 2) >> FIX14_SHIFT; //Approximeret afstand til asteroide
+
+	int32_t distTotal = (lang * 7 / 8 + kort / 2) >> 14; //Approximeret afstand til asteroide
 	// enhedskoordinater fra spiller til asteroide
+
+	if (tempX < 0) distX *= -1;
+	if (tempY < 0) distY *= -1;
+
 	int32_t deviceVectorX = (distX / distTotal);
 	int32_t deviceVectorY = (distY / distTotal);
 	// volumen af asteroide
 	int32_t vol = a.vol;
+
 	// sætter de hastighedsvektorer som påvirker spilleren fra asteroiden
+	(*p).velX += (gravityConst * vol / (distTotal * distTotal * 10) * deviceVectorX) >> FIX14_SHIFT;
+	(*p).velY += (gravityConst * vol / (distTotal * distTotal * 10) * deviceVectorY) >> FIX14_SHIFT;
 
-	gotoxy(0,10);
-	printFix(expand((deviceVectorX)));
-
-	gotoxy(0,11);
-	printFix(expand((deviceVectorY)));
-
-	gotoxy(0,12);
-	printf("%d", distTotal);
-
-
-
-	p->velX += (gravityConst * vol / (distTotal * distTotal * 9) * (deviceVectorX >> 14));
-
-	p->velY += (gravityConst * vol / (distTotal * distTotal * 9) * (deviceVectorY >> 14));
-
-	gotoxy(0,15);
-	printFix(expand(((gravityConst * vol / (distTotal * distTotal * 9) * deviceVectorX)) >> 14));
-
-	gotoxy(0,16);
-	printFix(expand(((gravityConst * vol / (distTotal * distTotal * 9) * deviceVectorY)) >> 14));
+	fgcolor(0);
 }
 
 
-
-int collision (struct player_t p, struct asteroid a , struct gameWindow w ) {
+int collision (struct player2_t p, struct asteroid a /*, struct gameWindow w */) {
 	int c = 0;
 	int playerX = p.posX >> 14;
 	int playerY = p.posY >> 14;
@@ -395,5 +391,3 @@ void titleScreen(char letter[]) {
 			}
 	}//teks
 }
-
-*/

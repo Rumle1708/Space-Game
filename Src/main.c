@@ -29,6 +29,7 @@
 #define FIX14_MULT(a,b) (((a)*(b)) >> FIX14_SHIFT)
 #define FIX14_DIV(a,b) (((a)<<FIX14_SHIFT)/b)
 
+
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 
 int main(void){
@@ -59,7 +60,7 @@ int main(void){
 
 	struct asteroid asteroid;
 
-	//drawAsteroid(&asteroid, 100, 50, 20);
+	drawAsteroid(&asteroid, 100, 50, 10);
 
 	initPlayer(&p1, 50, 10, 0, sprite, 2);
 
@@ -71,7 +72,7 @@ int main(void){
 
 	struct powerup powerup1, powerup2;
 
-	powerupInit(&powerup1, 100, 50, 1);
+	powerupInit(&powerup1, 50, 50, 1);
 
 	powerupInit(&powerup2, 150, 20, 2);
 
@@ -104,9 +105,8 @@ int main(void){
 
 			int32_t switches = readSwitches();
 
-			gotoxy(0,10);
 
-			printf("%d", switches);
+			/*
 
 			if (switches == 3 || switches == 1){
 				spawnProjectile(&proj,&p1);
@@ -116,9 +116,11 @@ int main(void){
 				spawnProjectile(&proj,&p2);
 			}
 
+			*/
+
 			updateProjectiles(&proj);
 
-			//gravity(&p1, asteroid);
+			gravity(&p1, asteroid);
 
 			updatePlayer(&p1, readADC(2), readADC(1));
 
@@ -135,6 +137,16 @@ int main(void){
 			impactDetection(&p1, &proj);
 
 			impactDetection(&p2, &proj);
+
+
+
+			if(collision(p1, asteroid)){
+
+				p1.lives = 0;
+
+			}
+
+
 
 			fflush(stdout);
 			global = 0;

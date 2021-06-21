@@ -117,7 +117,7 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
 	if(!(p->lives <= 0)){
 
-		int32_t temp_angle = ((((angle - 2048) << 14) * (0x0001 << 5)) >> 14);
+		int32_t temp_angle = ((((angle - 2048) << 14) * (0x0001 << 6)) >> 14);
 			int32_t temp_throttle = ((((throttle - 2048) << 14) * (0x0001 << 1)) >> 16);
 
 
@@ -145,12 +145,8 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
 			} else {
 
-				/*
-
 				p->velX = FIX14_MULT(p->velX, 0b11111010000000);
 				p->velY = FIX14_MULT(p->velY, 0b11111010000000);
-
-				*/
 
 			}
 
