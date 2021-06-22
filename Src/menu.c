@@ -12,6 +12,8 @@
 #include "ansi.h"
 #include "player.h"
 #include "projectile.h"
+#include "powerup.h"
+#include "thorTing.h"
 
 void printHelp(){
 	printf("Putty settings:\n");
@@ -141,20 +143,42 @@ int32_t gameMenu(){
 	return IO;
 }
 
-void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5][5], struct projectile_t *proj, struct powerup *pUp){
+void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5][5], struct projectile_t *proj, struct powerup *pUp1, struct powerup *pUp2, struct asteroid *asteroid1, struct asteroid *asteroid2){
 	int32_t i = gameMenu();
 	if (CHECK_BIT(i,0)){
+
+		// asteroids
+
 		initPlayer(p1, 50, 10, 0, sprite,1);
 		initPlayer(p2, 100, 10, 180, sprite,2);
-		powerupInit(pUp, 100, 50, 1);
+
+		powerupInit(pUp1, 75, 20, 1);
+		powerupInit(pUp2, 150, 75, 2);
+
+		drawAsteroid(asteroid1, 100, 50, 20);
+
+
 	} else if (CHECK_BIT(i,1)){
-		initPlayer(p1, 10, 10, 0, sprite,1);
-		initPlayer(p2, 250, 80, 180, sprite,2);
-		powerupInit(pUp, 100, 50, 1);
-	} else {
+
+		// star destroyer
+
 		initPlayer(p1, 50, 10, 0, sprite,1);
 		initPlayer(p2, 100, 10, 180, sprite,2);
-		powerupInit(pUp, 100, 50, 1);
+
+		powerupInit(pUp1, 100, 50, 1);
+		powerupInit(pUp2, 100, 80, 2);
+
+		drawAsteroid(asteroid1, 200, 20, 15);
+		drawAsteroid(asteroid2, 100, 60, 10);
+
+
+	} else {
+
+		// black hole
+
+		initPlayer(p1, 50, 10, 0, sprite,1);
+		initPlayer(p2, 100, 10, 180, sprite,2);
+		powerupInit(pUp1, 100, 50, 1);
 	}
 
 	initProjectiles(proj);

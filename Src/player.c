@@ -44,6 +44,7 @@ void deletePlayer(struct player2_t *p){
 		for(int32_t j = 0; j < 5; j++){
 
 			if(p->sprite[i][j] != 0){
+
 				int32_t sprite_x = approxShift14(((cosinus(p->angle) * ((i - 2) << 14)) >> 14) - ((sinus(p->angle) * ((j - 2) << 14)) >> 14));
 
 				int32_t sprite_y = approxShift14(((sinus(p->angle) * ((i - 2) << 14)) >> 14) + ((cosinus(p->angle) * ((j - 2) << 14)) >> 14));
@@ -83,7 +84,6 @@ int32_t joystickApprox(int32_t deg, int32_t throttle){
 void drawPlayer(struct player2_t *p){
 
 	// roterer sprite figuren i forhold til spillerens orientering
-
 
 	fgcolor(p->color);
 

@@ -112,7 +112,7 @@ int collisionPlayer (struct player2_t p, struct asteroid a) {
 	int playerY = p.posY >> 14;
 	int32_t i;
 
-	if (astDist < a.size * 2) {
+	if (astDist(p,a) < a.size * 2) {
 		if (playerX >= a.x && playerY <= a.y) { // første kvadrant
 			//printf("er i forste kvadrant");
 			for (i = 270; i <= 360; i = i + 3) {
@@ -157,7 +157,7 @@ int collisionProjectile (struct projectile_t p, struct asteroid a) {
 	int projectileY = p.posY >> 14;
 	int32_t i;
 
-	if (projDist < a.size * 2) {
+	if (projDist(p,a) < a.size * 2) {
 		if (projectileX >= a.x && projectileY <= a.y) { // første kvadrant
 			//printf("er i forste kvadrant");
 			for (i = 270; i <= 360; i = i + 3) {

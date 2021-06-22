@@ -40,7 +40,6 @@ int main(void){
 	clrscr();
 	// ESC[?25l
 	printf("%c[?%dl", ESC, 25);
-	//initIOJoystick();
 
 	initSwitches();
 
@@ -64,29 +63,25 @@ int main(void){
 	{0,0,1,0,0}
 	};
 
-	struct player2_t p1;
-
-	struct player2_t p2;
-
-	//struct asteroid asteroid;
-
-	//drawAsteroid(&asteroid, 100, 50, 10);
+	struct player2_t p1, p2;
 
 	struct projectile_t proj[ENTITIES];
 
-	struct powerup powerup1;
+	struct powerup powerup1, powerup2;
+
+	struct asteroid asteroid1, asteroid2;
+
+
 
 	while(1){
 
-		fgcolor(15);
-
-		configureLevel(&p1, &p2, sprite, &proj, &powerup1);
-
-		fgcolor(0);
+		configureLevel(&p1, &p2, sprite, &proj, &powerup1, &powerup2, &asteroid1, &asteroid2);
 
 		while((p1.lives > 0) && (p2.lives > 0)){
 
-			if (global == 1){
+			if (global != 0){
+
+				setLED(0,1,0);
 
 				int32_t switches = readSwitches();
 
@@ -174,7 +169,6 @@ int main(void){
 			fgcolor(0);
 
 		}
-
 	}
 }
 
