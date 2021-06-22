@@ -5,6 +5,8 @@
 #include "stdint.h"
 #include <string.h>
 #include "thorTing.h"
+#include "LUT.h"
+#include "math.h"
 
 void fgcolor(uint8_t foreground) {
 /*  Value      foreground     Value     foreground
@@ -58,6 +60,14 @@ void color(uint8_t foreground, uint8_t background) {
   printf("%c[%d;%d;%dm", ESC, type, foreground+30, background+40);
 }
 
+void setRGBColorFG(uint8_t red, uint8_t  green, uint8_t  blue){
+	printf("%c[%d;%d;%d;%d;%dm",0x1B, 38, 2, red, green, blue);
+}
+
+void setRGBColorBG(uint8_t red, uint8_t  green, uint8_t  blue){
+	printf("%c[%d;%d;%d;%d;%dm",0x1B, 48, 2, red, green, blue);
+}
+
 void resetbgcolor() {
 // gray on black text, no underline, no blink, no reverse
   printf("%c[m", ESC);
@@ -71,7 +81,7 @@ void clreol(){
 	printf("%c[2K", 0x1B);
 }
 
-void gotoxy(uint32_t x, uint32_t y){
+void gotoxy(uint8_t x, uint8_t y){
 	printf("%c[%d;%df", 0x1B, y, x);
 }
 
@@ -88,6 +98,40 @@ void blink(uint8_t on){
 		printf("%c[%dm",0x1B, 05);
 	} else {
 		printf("%c[%dm",0x1B, 25);
+	}
+}
+
+void moveUp(uint8_t n){
+	printf("%c[%dA", 0x1B, n);
+}
+
+void moveDown(uint8_t n){
+	printf("%c[%dB", 0x1B, n);
+}
+
+void moveForward(uint8_t n){
+	printf("%c[%dC", 0x1B, n);
+}
+
+void moveBack(uint8_t n){
+	printf("%c[%dD", 0x1B, n);
+}
+
+void drawSquare(uint8_t width, uint8_t height, uint8_t x, uint8_t y){
+	int32_t i, j;
+	for (i = 0; i < height; i++){
+		gotoxy(x,y + i);
+		for (j = 0; j < width; j++){
+			printf(" ");
+		}
+	}
+}
+
+void drawCircle(int32_t r, int32_t x, int32_t y){
+	int32_t i;
+	for(i = 0; i < 360; i++){
+		gotoxy(approxShift14(2*r*cosinus(i)) + x,approxShift14(r*sinus(i)) + y);
+		printf(" ");
 	}
 }
 
@@ -204,18 +248,53 @@ void drawWindowNoTitle(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint3
 	}
 }
 
-void moveUp(uint32_t n){
-	printf("%c[%dA", 0x1B, n);
+void drawGameTitle(uint32_t x2, uint32_t y2){
+	int32_t i, j;
+
+	setRGBColorBG(128,128,128);
+	gotoxy(1,y2 + 1);
+	for (i = 0; i < 24; i++){
+		for (j = 0; j < x2; j++){
+			printf(" ");
+		}
+		printf("\n");
+	}
+
+	setRGBColorBG(210,0,0);
+	drawSquare(3,2,3,y2 + 3);
+	drawSquare(3,2,8,y2 + 3);
+	drawSquare(3,2,13,y2 + 3);
+	setRGBColorBG(210,210,0);
+	drawSquare(3,2,18,y2 + 3);
+	drawSquare(3,2,23,y2 + 3);
+	drawSquare(3,2,28,y2 + 3);
+	setRGBColorBG(0,210,0);
+	drawSquare(3,2,33,y2 + 3);
+	drawSquare(3,2,38,y2 + 3);
+	drawSquare(3,2,43,y2 + 3);
+	drawSquare(3,2,48,y2 + 3);
+
+	setRGBColorBG(100,0,0);
+	drawCircle(1,14, y2 + 15);
+	drawCircle(2,14, y2 + 15);
+	drawCircle(3,14, y2 + 15);
+	drawCircle(4,14, y2 + 15);
+	setRGBColorBG(0,0,0);
+	drawCircle(5,14, y2 + 15);
+
+	setRGBColorBG(0,128,0);
+	drawCircle(1,40, y2 + 15);
+	drawCircle(2,40, y2 + 15);
+	drawCircle(3,40, y2 + 15);
+	drawCircle(4,40, y2 + 15);
+	setRGBColorBG(0,0,0);
+	drawCircle(5,40, y2 + 15);
+
+	drawWindowNoTitle(x2 - 60, y2 + 2, x2 - 4, y2 + 22, 0);
+	setRGBColorBG(0,128,128);
+	drawSquare(55, 19, x2 - 59, y2 + 3);
+
+
+	setRGBColorBG(0,0,0);
 }
 
-void moveDown(uint32_t n){
-	printf("%c[%dB", 0x1B, n);
-}
-
-void moveForward(uint32_t n){
-	printf("%c[%dC", 0x1B, n);
-}
-
-void moveBack(uint32_t n){
-	printf("%c[%dD", 0x1B, n);
-}

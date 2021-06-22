@@ -17,6 +17,8 @@ void underline(uint8_t on);
 void blink(uint8_t on);
 void drawWindow(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, char title[], uint8_t style);
 void drawWindowNoTitle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t style);
+void drawGameTitle(uint32_t x2, uint32_t y2);
+void set256ColorFG(uint8_t color);
 void moveUp(uint8_t n);
 void moveDown(uint8_t n);
 void moveForward(uint8_t n);

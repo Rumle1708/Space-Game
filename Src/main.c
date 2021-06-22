@@ -17,10 +17,11 @@
 #include "ADC2.h"
 #include "powerup.h"
 #include "thorTing.h"
+#include "menu.h"
 
 #define X1 1
 #define Y1 1
-#define X2 245
+#define X2 255
 #define Y2 100
 #define ENTITIES 10
 
@@ -43,11 +44,16 @@ int main(void){
 
 	initSwitches();
 
+	initIOJoystick();
+
 	initIOLED();
+
+	lcd_init();
 
 	setLED(0,1,0);
 
 	initTimer();
+
 	initADC();
 
 	int32_t sprite[5][5] = {
@@ -64,51 +70,18 @@ int main(void){
 
 	struct asteroid asteroid;
 
-	drawAsteroid(&asteroid, 100, 50, 10);
-
-	initPlayer(&p1, 50, 10, 0, sprite, 2);
-
-	initPlayer(&p2, 200 , 50, -180, sprite, 4);
+	//drawAsteroid(&asteroid, 100, 50, 10);
 
 	struct projectile_t proj[ENTITIES];
 
-	initProjectiles(&proj);
-
 	struct powerup powerup1, powerup2;
 
-	powerupInit(&powerup1, 50, 50, 1);
+	configureLevel(&p1, &p2, sprite, &proj, &powerup1);
 
-	powerupInit(&powerup2, 150, 20, 2);
-
-
-
-	/*
-	void drawWeirdShit(int32_t r){
-		r <<= FIX14_SHIFT;
-		int32_t i, x, y;
-		for(i = 0; i < 360; i++){
-			int32_t x2 = FIX14_MULT(r,cosinus(i));
-			int32_t y2 = FIX14_MULT(r,sinus(i));
-			x = approxShift14(x2*4);
-			y = approxShift14(y2*4);
-			gotoxy(2*x + 100,y + 64);
-			printf("o");
-		}
-	}
-
-	void drawCircle(int32_t r, int32_t x, int32_t y){
-		int32_t i;
-		for(i = 0; i < 360; i++){
-			gotoxy(approxShift14(2*r*cosinus(i)) + x,approxShift14(r*sinus(i)) + y);
-			printf("snof");
-		}
-	}
-	*/
 	while(1){
 		if (global == 1){
 
 			int32_t switches = readSwitches();
-
 
 			switch(switches){
 			case 0:
@@ -125,8 +98,6 @@ int main(void){
 				break;
 			}
 
-
-
 			if (switches == 3 || switches == 1){
 				spawnProjectile(&proj,&p1);
 			}
@@ -139,7 +110,7 @@ int main(void){
 
 			updateProjectiles(&proj);
 
-			gravity(&p1, asteroid);
+			//gravity(&p1, asteroid);
 
 			updatePlayer(&p1, readADC(2), readADC(1));
 
@@ -157,7 +128,7 @@ int main(void){
 
 			impactDetection(&p2, &proj);
 
-
+			/*
 
 			if(collision(p1, asteroid)){
 
@@ -165,7 +136,7 @@ int main(void){
 
 			}
 
-
+			*/
 
 			fflush(stdout);
 			global = 0;
