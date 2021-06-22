@@ -44,6 +44,10 @@ void initIOJoystick(){
 }
 
 void initIOLED(){
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOA; // Enable clock for GPIO Port A
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOB; // Enable clock for GPIO Port B
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOC; // Enable clock for GPIO Port C
+
 	// A9 Blue
 	GPIOA->OSPEEDR &= ~(0x00000003 << (9 * 2));
 	GPIOA->OSPEEDR |= (0x00000002 << (9 * 2));
@@ -67,6 +71,7 @@ void initIOLED(){
 	GPIOB->OTYPER |= (0x0000 << (1)); // Set output type register (0x00 -
 	GPIOB->MODER &= ~(0x00000003 << (4 * 2)); // Clear mode register
 	GPIOB->MODER |= (0x00000001 << (4 * 2)); // Set mode register (0x00 –
+
 
 	GPIOB->ODR &= ~(0x0001 << 4);
 	GPIOC->ODR &= ~(0x0001 << 7);

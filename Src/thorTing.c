@@ -19,7 +19,7 @@ void drawAsteroid(struct asteroid *a, int32_t x1, int32_t y1, int32_t size1) {
 		(*a).y = y1;
 		(*a).size = size1;
 		for (int i = 0; i <= 360; i++) {
-			gotoxy(approxShift14(cosinus(i)*size1)*1.8 + (*a).x, approxShift14(sinus(i)*size1) + (*a).y);
+			gotoxy(approxShift14(cosinus(i)*size1) * 18 / 10 + (*a).x, approxShift14(sinus(i)*size1) + (*a).y);
 			printf("%s", "o");
 		}
 		(*a).vol = ((M_PI * 4 / 3 * size1 * size1 * size1)) >> 14;
@@ -27,9 +27,7 @@ void drawAsteroid(struct asteroid *a, int32_t x1, int32_t y1, int32_t size1) {
 }
 
 void gravity (struct player2_t *p, struct asteroid a) {
-
 	fgcolor(15);
-
 	const int gravityConst = (1 << FIX14_SHIFT) / 200; //Tweekes til passende tyngdekraft
 	int32_t lang, kort;
 	// x og y-koordinater fra spiller til asteroide
@@ -39,17 +37,16 @@ void gravity (struct player2_t *p, struct asteroid a) {
 	int32_t tempX = distX;
 	int32_t tempY = distY;
 
-	if (tempX < 0) distX *= -1;
-	if (tempY < 0) distY *= -1;
+	if (tempX < 0) tempX *= -1;
+	if (tempY < 0) tempY *= -1;
 
 	if (distX > distY) {
-		lang = distX;
-		kort = distY;
+		lang = tempX;
+		kort = tempY;
 	} else {
-		kort = distX;
-		lang = distY;
+		kort = tempX;
+		lang = tempY;
 	}
-
 	int32_t distTotal = (lang * 7 / 8 + kort / 2) >> 14; //Approximeret afstand til asteroide
 	// enhedskoordinater fra spiller til asteroide
 
@@ -60,7 +57,6 @@ void gravity (struct player2_t *p, struct asteroid a) {
 	int32_t deviceVectorY = (distY / distTotal);
 	// volumen af asteroide
 	int32_t vol = a.vol;
-
 	// sætter de hastighedsvektorer som påvirker spilleren fra asteroiden
 	(*p).velX += (gravityConst * vol / (distTotal * distTotal * 10) * deviceVectorX) >> FIX14_SHIFT;
 	(*p).velY += (gravityConst * vol / (distTotal * distTotal * 10) * deviceVectorY) >> FIX14_SHIFT;
@@ -68,45 +64,90 @@ void gravity (struct player2_t *p, struct asteroid a) {
 	fgcolor(0);
 }
 
+int32_t projDist (struct projectile_t proj, struct asteroid a) {
+	int32_t lang, kort;
+	// x og y-koordinater fra spiller til asteroide
+	int32_t distX = ((a.x << FIX14_SHIFT) - proj.posX);
+	int32_t distY = ((a.y << FIX14_SHIFT) - proj.posY);
+
+	if (distX < 0) distX *= -1;
+	if (distY < 0) distY *= -1;
+
+	if (distX > distY) {
+		lang = distX;
+		kort = distY;
+	} else {
+		kort = distX;
+		lang = distY;
+	}
+	int32_t distTotal = (lang * 7 / 8 + kort / 2) >> 14; //Approximeret afstand til asteroide
+	// enhedskoordinater fra spiller til asteroide
+	return distTotal;
+}
+
+int32_t astDist (struct player2_t p, struct asteroid a) {
+	int32_t lang, kort;
+	// x og y-koordinater fra spiller til asteroide
+	int32_t distX = ((a.x << FIX14_SHIFT) - p.posX);
+	int32_t distY = ((a.y << FIX14_SHIFT) - p.posY);
+
+	if (distX < 0) distX *= -1;
+	if (distY < 0) distY *= -1;
+
+	if (distX > distY) {
+		lang = distX;
+		kort = distY;
+	} else {
+		kort = distX;
+		lang = distY;
+	}
+	int32_t distTotal = (lang * 7 / 8 + kort / 2); //Approximeret afstand til asteroide
+	// enhedskoordinater fra spiller til asteroide
+	return distTotal;
+}
 
 int collision (struct player2_t p, struct asteroid a /*, struct gameWindow w */) {
 	int c = 0;
 	int playerX = p.posX >> 14;
 	int playerY = p.posY >> 14;
 	int32_t i;
-	if (playerX >= a.x && playerY <= a.y) { // første kvadrant
-		//printf("er i forste kvadrant");
-		for (i = 270; i <= 360; i++) {
-			if (playerX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY >= (approxShift14(sinus(i)*a.size) + a.y)) {
-				c = 1;
+//
+	if (astDist > a.size) {
+		if (playerX >= a.x && playerY <= a.y) { // første kvadrant
+			//printf("er i forste kvadrant");
+			for (i = 270; i <= 360; i = i + 3) {
+				if (playerX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY >= (approxShift14(sinus(i)*a.size) + a.y)) {
+					c = 1;
+				}
+			}
+		} else if (playerX < a.x && playerY <= a.y) { // anden kvadrant
+			//printf("er i anden kvadrant");
+			for (i = 180; i <= 270; i = i + 3) {
+				if (playerX >= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && playerY >= approxShift14(sinus(i)*a.size) + a.y) {
+					c = 1;
+				}
+			}
+		} else if (playerX < a.x && playerY > a.y) { // tredje kvadrant
+			//printf("er i tredje kvadrant");
+			for (i = 90; i <= 180; i = i + 3) {
+				if (playerX >= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
+					c = 1;
+				}
+			}
+		} else { // fjerde kvadrant
+			//printf("er i fjerde kvadrant");
+			for (i = 0; i <= 90; i = i + 3) {
+				if (playerX <= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
+					c = 1;
+				}
 			}
 		}
-	} else if (playerX < a.x && playerY <= a.y) { // anden kvadrant
-		//printf("er i anden kvadrant");
-		for (i = 180; i <= 270; i++) {
-			if (playerX >= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && playerY >= approxShift14(sinus(i)*a.size) + a.y) {
-				c = 1;
-			}
-		}
-	} else if (playerX < a.x && playerY > a.y) { // tredje kvadrant
-		//printf("er i tredje kvadrant");
-		for (i = 90; i <= 180; i++) {
-			if (playerX >= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
-				c = 1;
-			}
-		}
-	} else { // fjerde kvadrant
-		//printf("er i fjerde kvadrant");
-		for (i = 0; i <= 90; i++) {
-			if (playerX <= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
-				c = 1;
-			}
+
+		if (playerX <= X1 || playerX >= X2 || playerY <= Y1 || playerY >= Y2) {
+			c = 1;
 		}
 	}
 
-	if (playerX <= X1 || playerX >= X2 || playerY <= Y1 || playerY >= Y2) {
-		c = 1;
-	}
 	return c;
 }
 

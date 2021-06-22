@@ -43,6 +43,10 @@ int main(void){
 
 	initSwitches();
 
+	initIOLED();
+
+	setLED(0,1,0);
+
 	initTimer();
 	initADC();
 
@@ -106,7 +110,22 @@ int main(void){
 			int32_t switches = readSwitches();
 
 
-			/*
+			switch(switches){
+			case 0:
+				setLED(0,1,0);
+				break;
+			case 1:
+				setLED(1,0,0);
+				break;
+			case 2:
+				setLED(0,0,1);
+				break;
+			case 3:
+				setLED(1,0,1);
+				break;
+			}
+
+
 
 			if (switches == 3 || switches == 1){
 				spawnProjectile(&proj,&p1);
@@ -116,7 +135,7 @@ int main(void){
 				spawnProjectile(&proj,&p2);
 			}
 
-			*/
+
 
 			updateProjectiles(&proj);
 
