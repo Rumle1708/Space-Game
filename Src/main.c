@@ -2,10 +2,7 @@
 #include "30010_io.h"
 #include <stdio.h>
 #include <string.h>
-#include "LUT.h"
 #include "ansi.h"
-#include "vector.h"
-#include "ball.h"
 #include "IO.h"
 #include "timer.h"
 #include "charset.h"
@@ -35,11 +32,11 @@
 
 int main(void){
 	// Initialization
-	uart_init(2000000);
+	uart_init(115200);
 	uart_clear();
 	clrscr();
 	// ESC[?25l
-	printf("%c[?%dl", ESC, 25);
+	printf("%c[?%dl", ESC, 25); // Removes cursor
 
 	initSwitches();
 

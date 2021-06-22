@@ -5,7 +5,6 @@
 #include "stdint.h"
 #include <string.h>
 #include "thorTing.h"
-#include "LUT.h"
 #include "math.h"
 
 void fgcolor(uint8_t foreground) {

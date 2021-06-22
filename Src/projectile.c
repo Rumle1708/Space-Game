@@ -8,7 +8,6 @@
 #include "30010_io.h" 		// Input/output library for this course
 #include "main.h"
 #include "player.h"
-#include "LUT.h"
 #include "math.h"
 #include "ansi.h"
 #include "projectile.h"
