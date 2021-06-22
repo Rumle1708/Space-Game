@@ -12,7 +12,8 @@ struct asteroid {
 
 void drawAsteroid(struct asteroid *a, int32_t x, int32_t y, int32_t size);
 void gravity (struct player2_t *p, struct asteroid a);
-int collision (struct player2_t p, struct asteroid a /* , struct gameWindow w */);
+int collisionPlayer (struct player2_t p, struct asteroid a);
+int collisionProjectile (struct projectile_t p, struct asteroid a);
 void titleScreen(char letter[]);
 int32_t projDist (struct projectile_t proj, struct asteroid a);
 int32_t astDist (struct player2_t p, struct asteroid a);

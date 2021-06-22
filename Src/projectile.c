@@ -33,24 +33,26 @@ void updateProjectiles(struct projectile_t *p){
 	for (int32_t i = 0; i < ENTITIES; i++){
 		if(p[i].alive){
 			gotoxy(approxShift14(p[i].posX),approxShift14(p[i].posY));
-			printf(" ");
+
+			printf("%c",0x20);
+
 			p[i].posX += p[i].velX;
 			p[i].posY += p[i].velY;
 
 			int32_t x = approxShift14(p[i].posX);
 			int32_t y = approxShift14(p[i].posY);
-			gotoxy(x,y);
-			printf("╬");
-			p[i].time++;
 
-			if(p[i].time > 24 || (x < X1) || (x > X2) || (y < Y1) || (y > Y2)){
+			if(p[i].time > 24 || (x < (X1 + 1)) || (x > (X2 - 1)) || (y < (Y1 + 1)) || (y > (Y2 - 1))){
+
 				p[i].alive = 0;
 				p[i].time = 0;
+
+			} else {
+
 				gotoxy(x,y);
+				printf("%c", 0xCE);
+				p[i].time++;
 
-				fgcolor(1);
-
-				printf(" ");
 			}
 		}
 	}
@@ -157,7 +159,7 @@ void impactDetection(struct player2_t *player, struct projectile_t *p){
 
 			gotoxy(approxShift14(p[i].posX),approxShift14(p[i].posY));
 
-			printf(" ");
+			printf("%c",0x20);
 
 		}
 

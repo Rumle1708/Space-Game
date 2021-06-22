@@ -22,13 +22,13 @@ void drawAsteroid(struct asteroid *a, int32_t x1, int32_t y1, int32_t size1) {
 			gotoxy(approxShift14(cosinus(i)*size1) * 18 / 10 + (*a).x, approxShift14(sinus(i)*size1) + (*a).y);
 			printf("%s", "o");
 		}
-		(*a).vol = ((M_PI * 4 / 3 * size1 * size1 * size1)) >> 14;
+		(*a).vol = (M_PI * 4 / 3 * size1 * size1 * size1) >> 14;
 	fgcolor(0);
 }
 
 void gravity (struct player2_t *p, struct asteroid a) {
 	fgcolor(15);
-	const int gravityConst = (1 << FIX14_SHIFT) / 200; //Tweekes til passende tyngdekraft
+	const int gravityConst = (1 << FIX14_SHIFT) / 2000; //Tweekes til passende tyngdekraft
 	int32_t lang, kort;
 	// x og y-koordinater fra spiller til asteroide
 	int32_t distX = ((a.x << FIX14_SHIFT) - (*p).posX);
@@ -58,8 +58,8 @@ void gravity (struct player2_t *p, struct asteroid a) {
 	// volumen af asteroide
 	int32_t vol = a.vol;
 	// sætter de hastighedsvektorer som påvirker spilleren fra asteroiden
-	(*p).velX += (gravityConst * vol / (distTotal * distTotal * 10) * deviceVectorX) >> FIX14_SHIFT;
-	(*p).velY += (gravityConst * vol / (distTotal * distTotal * 10) * deviceVectorY) >> FIX14_SHIFT;
+	(*p).velX += (gravityConst * vol / (distTotal * distTotal) * deviceVectorX) >> FIX14_SHIFT;
+	(*p).velY += (gravityConst * vol / (distTotal * distTotal) * deviceVectorY) >> FIX14_SHIFT;
 
 	fgcolor(0);
 }
@@ -106,13 +106,13 @@ int32_t astDist (struct player2_t p, struct asteroid a) {
 	return distTotal;
 }
 
-int collision (struct player2_t p, struct asteroid a /*, struct gameWindow w */) {
+int collisionPlayer (struct player2_t p, struct asteroid a) {
 	int c = 0;
 	int playerX = p.posX >> 14;
 	int playerY = p.posY >> 14;
 	int32_t i;
-//
-	if (astDist > a.size) {
+
+	if (astDist < a.size * 2) {
 		if (playerX >= a.x && playerY <= a.y) { // første kvadrant
 			//printf("er i forste kvadrant");
 			for (i = 270; i <= 360; i = i + 3) {
@@ -142,10 +142,55 @@ int collision (struct player2_t p, struct asteroid a /*, struct gameWindow w */)
 				}
 			}
 		}
+	}
 
-		if (playerX <= X1 || playerX >= X2 || playerY <= Y1 || playerY >= Y2) {
-			c = 1;
+	if (playerX <= X1 || playerX >= X2 || playerY <= Y1 || playerY >= Y2) {
+		c = 1;
+	}
+
+	return c;
+}
+
+int collisionProjectile (struct projectile_t p, struct asteroid a) {
+	int c = 0;
+	int projectileX = p.posX >> 14;
+	int projectileY = p.posY >> 14;
+	int32_t i;
+
+	if (projDist < a.size * 2) {
+		if (projectileX >= a.x && projectileY <= a.y) { // første kvadrant
+			//printf("er i forste kvadrant");
+			for (i = 270; i <= 360; i = i + 3) {
+				if (projectileX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && projectileY >= (approxShift14(sinus(i)*a.size) + a.y)) {
+					c = 1;
+				}
+			}
+		} else if (projectileX < a.x && projectileY <= a.y) { // anden kvadrant
+			//printf("er i anden kvadrant");
+			for (i = 180; i <= 270; i = i + 3) {
+				if (projectileX >= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && projectileY >= approxShift14(sinus(i)*a.size) + a.y) {
+					c = 1;
+				}
+			}
+		} else if (projectileX < a.x && projectileY > a.y) { // tredje kvadrant
+			//printf("er i tredje kvadrant");
+			for (i = 90; i <= 180; i = i + 3) {
+				if (projectileX >= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && projectileY <= approxShift14(sinus(i)*a.size) + a.y) {
+					c = 1;
+				}
+			}
+		} else { // fjerde kvadrant
+			//printf("er i fjerde kvadrant");
+			for (i = 0; i <= 90; i = i + 3) {
+				if (projectileX <= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && projectileY <= approxShift14(sinus(i)*a.size) + a.y) {
+					c = 1;
+				}
+			}
 		}
+	}
+
+	if (projectileX <= X1 || projectileX >= X2 || projectileY <= Y1 || projectileY >= Y2) {
+		c = 1;
 	}
 
 	return c;
@@ -419,10 +464,7 @@ void titleScreen(char letter[]) {
                 else if(letter[j1]=='z')
                     printf("%s", Z[i1]);
                 else if(letter[j1]==' ') {
-                	for (int count = 0; count <= 500000; count++)
-                		if (count == 500000) {
-                			x1 = 0;
-                		}
+
                 }
 			}
 			x1 = x1 + 10;

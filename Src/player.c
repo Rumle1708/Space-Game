@@ -50,7 +50,7 @@ void deletePlayer(struct player2_t *p){
 
 				gotoxy(sprite_x + approxShift14(p->posX), sprite_y + approxShift14(p->posY));
 
-				printf(" ");
+				printf("%c",0x20);
 
 
 			}
@@ -99,7 +99,7 @@ void drawPlayer(struct player2_t *p){
 
 				gotoxy(sprite_x + approxShift14(p->posX), sprite_y + approxShift14(p->posY));
 
-				printf("■");
+				printf("%c", 0xDB);
 
 
 			}
@@ -195,7 +195,7 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
 				gotoxy(i-2, j-2);
 
-				printf("");
+				printf(" ");
 
 			}
 

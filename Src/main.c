@@ -76,73 +76,105 @@ int main(void){
 
 	struct powerup powerup1;
 
-	fgcolor(15);
-
-	configureLevel(&p1, &p2, sprite, &proj, &powerup1);
-
 	while(1){
-		if (global == 1){
 
-			int32_t switches = readSwitches();
+		fgcolor(15);
 
-			switch(switches){
-			case 0:
-				setLED(0,1,0);
-				break;
-			case 1:
-				setLED(1,0,0);
-				break;
-			case 2:
-				setLED(0,0,1);
-				break;
-			case 3:
-				setLED(1,0,1);
-				break;
+		configureLevel(&p1, &p2, sprite, &proj, &powerup1);
+
+		fgcolor(0);
+
+		while((p1.lives > 0) && (p2.lives > 0)){
+
+			if (global == 1){
+
+				int32_t switches = readSwitches();
+
+				switch(switches){
+				case 0:
+					setLED(0,1,0);
+					break;
+				case 1:
+					setLED(1,0,0);
+					break;
+				case 2:
+					setLED(0,0,1);
+					break;
+				case 3:
+					setLED(1,0,1);
+					break;
+				}
+
+				if (switches == 3 || switches == 1){
+					spawnProjectile(&proj,&p1);
+				}
+
+				if (switches == 2 || switches == 3){
+					spawnProjectile(&proj,&p2);
+				}
+
+
+
+				updateProjectiles(&proj);
+
+				//gravity(&p1, asteroid);
+
+				updatePlayer(&p1, readADC(2), readADC(1));
+
+				updatePlayer(&p2, readADC(4), readADC(3));
+
+				powerupUpdate(&powerup1, &p1);
+
+				//powerupUpdate(&powerup2, &p1);
+
+				powerupUpdate(&powerup1, &p2);
+
+				//powerupUpdate(&powerup2, &p2);
+
+				impactDetection(&p1, &proj);
+
+				impactDetection(&p2, &proj);
+
+				/*
+
+				if(collision(p1, asteroid)){
+
+					p1.lives = 0;
+
+				}
+
+				*/
+
+				fflush(stdout);
+				global = 0;
 			}
-
-			if (switches == 3 || switches == 1){
-				spawnProjectile(&proj,&p1);
-			}
-
-			if (switches == 2 || switches == 3){
-				spawnProjectile(&proj,&p2);
-			}
-
-
-
-			updateProjectiles(&proj);
-
-			//gravity(&p1, asteroid);
-
-			updatePlayer(&p1, readADC(2), readADC(1));
-
-			updatePlayer(&p2, readADC(4), readADC(3));
-
-			powerupUpdate(&powerup1, &p1);
-
-			//powerupUpdate(&powerup2, &p1);
-
-			powerupUpdate(&powerup1, &p2);
-
-			//powerupUpdate(&powerup2, &p2);
-
-			impactDetection(&p1, &proj);
-
-			impactDetection(&p2, &proj);
-
-			/*
-
-			if(collision(p1, asteroid)){
-
-				p1.lives = 0;
-
-			}
-
-			*/
-
-			fflush(stdout);
-			global = 0;
 		}
+
+
+		/*	Add endgame screen here;
+		 *
+		 *
+		 *
+		 */
+
+		if(p1.lives != 0){
+
+			fgcolor(p1.color);
+
+			titleScreen("player one wins");
+
+			fgcolor(0);
+
+		} else {
+
+			fgcolor(p2.color);
+
+			titleScreen("player two wins");
+
+			fgcolor(0);
+
+		}
+
 	}
 }
 
