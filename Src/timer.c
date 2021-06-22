@@ -25,7 +25,7 @@ void initTimer(){
 }
 
 void TIM2_IRQHandler(void) {
-	global ^= (1 << 0);
+	global++;
 	TIM2->SR &= ~0x0001; // Clear interrupt bit
 }
 

@@ -133,9 +133,11 @@ int32_t gameMenu(){
 				IO ^= 1 << 3;
 				break;
 			}
+
 			global = 0;
 		}
 	}
+
 	return IO;
 }
 
@@ -154,5 +156,6 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 		initPlayer(p2, 100, 10, 180, sprite,2);
 		powerupInit(pUp, 100, 50, 1);
 	}
+
 	initProjectiles(proj);
 }

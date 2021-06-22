@@ -68,13 +68,15 @@ int main(void){
 
 	struct player2_t p2;
 
-	struct asteroid asteroid;
+	//struct asteroid asteroid;
 
 	//drawAsteroid(&asteroid, 100, 50, 10);
 
 	struct projectile_t proj[ENTITIES];
 
-	struct powerup powerup1, powerup2;
+	struct powerup powerup1;
+
+	fgcolor(15);
 
 	configureLevel(&p1, &p2, sprite, &proj, &powerup1);
 
@@ -118,11 +120,11 @@ int main(void){
 
 			powerupUpdate(&powerup1, &p1);
 
-			powerupUpdate(&powerup2, &p1);
+			//powerupUpdate(&powerup2, &p1);
 
 			powerupUpdate(&powerup1, &p2);
 
-			powerupUpdate(&powerup2, &p2);
+			//powerupUpdate(&powerup2, &p2);
 
 			impactDetection(&p1, &proj);
 

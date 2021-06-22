@@ -184,23 +184,7 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
 			drawPlayer(p);
 
-			/*
-s
-			gotoxy(0,0);
-			printf("\nposX: ");
-			printFix(expand(p->posX));
-			printf("\nposY: ");
-			printFix(expand(p->posY));
-			printf("\nvelX: ");
-			printFix(expand(p->velX));
-			printf("\nvelY: ");
-			printFix(expand(p->velY));
-			printf("\nangle: ");
-			printf("%ld    ", p->angle);
-			printf("\nlives: ");
-			printf("%ld    ", p->lives);
 
-			*/
 
 
 	} else {
