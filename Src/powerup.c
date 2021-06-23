@@ -84,9 +84,17 @@ void powerupUpdate(struct powerup *powerup, struct player2_t *player){
 
 	}
 
+}
 
+void checkPowerup(struct powerup *powerup1, struct powerup *powerup2, struct player2_t *player1, struct player2_t *player2){
 
+	powerupUpdate(powerup1, player1);
 
+	powerupUpdate(powerup2, player1);
 
+	powerupUpdate(powerup1, player2);
+
+	powerupUpdate(powerup2, player2);
 
 }
+

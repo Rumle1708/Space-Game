@@ -14,6 +14,8 @@ struct player2_t{
 };
 
 
+#include "thorTing.h"
+
 //void initPlayer(struct player_t *p, int32_t x, int32_t y);
 void initPlayer(struct player2_t *p, int32_t x, int32_t y, int32_t angle, int32_t sprite[5][5], int32_t color);
 
@@ -26,6 +28,6 @@ void drawPlayer(struct player2_t *p);
 //void deletePlayer(struct player_t *p);
 void deletePlayer(struct player2_t *p);
 
-int32_t joystickApprox(int32_t deg, int32_t throttle);
+void movePlayer(struct player2_t *p1, struct player2_t *p2, struct asteroid asteroid1, struct asteroid asteroid2);
 
 #endif /* PLAYER_H_ */

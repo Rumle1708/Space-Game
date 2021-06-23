@@ -3,13 +3,10 @@
 #include "main.h"
 #include "ansi.h"
 #include "math.h"
+#include "thorTing.h"
+#include "player.h"
 
 // Struct for player
-
-struct player2_t{
-	int32_t posX, posY, velX, velY, angle, shotType, shotConstant, lives, color;
-	int32_t sprite[5][5];
-};
 
 
 void initPlayer(struct player2_t *p, int32_t x, int32_t y, int32_t angle, int32_t sprite[5][5], int32_t color){
@@ -56,27 +53,6 @@ void deletePlayer(struct player2_t *p){
 			}
 		}
 	}
-}
-
-
-int32_t joystickApprox(int32_t deg, int32_t throttle){
-
-	int32_t out = 0;
-
-	if(throttle > 3000){
-		out ^= 1 << 0;
-	} else if (throttle < 1000){
-		out ^= 1 << 1;
-	}
-
-	if(deg > 3000){
-		out ^= 1 << 2;
-	} else if(deg < 1000){
-		out ^= 1 << 3;
-	}
-
-	return out;
-
 }
 
 
@@ -197,7 +173,54 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
 		}
 
+	}
+
+}
+
+void movePlayer(struct player2_t *p1, struct player2_t *p2, struct asteroid asteroid1, struct asteroid asteroid2){
+
+	if(asteroid1.size != 0){
+
+		gravity(p1, asteroid1);
+
+		gravity(p2, asteroid1);
+
+		if(collisionPlayer(p1, asteroid1)){
+
+			p1->lives = 0;
+
+		}
+
+		if(collisionPlayer(p2, asteroid1)){
+
+			p2->lives = 0;
+
+		}
 
 	}
+
+	if(asteroid2.size != 0){
+
+		gravity(p1, asteroid2);
+
+		gravity(p2, asteroid2);
+
+		if(collisionPlayer(p1, asteroid2)){
+
+			p1->lives = 0;
+
+		}
+
+		if(collisionPlayer(p2, asteroid2)){
+
+			p2->lives = 0;
+
+		}
+
+	}
+
+	updatePlayer(p1, readADC(2), readADC(1));
+
+	updatePlayer(p2, readADC(4), readADC(3));
 
 }

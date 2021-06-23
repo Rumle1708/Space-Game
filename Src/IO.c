@@ -85,13 +85,13 @@ void initSwitches(){
 	RCC->AHBENR |= RCC_AHBPeriph_GPIOA; // Enable clock for GPIO Port A
 	RCC->AHBENR |= RCC_AHBPeriph_GPIOC; // Enable clock for GPIO Port C
 
-	// C0 right
+	// A5
 	GPIOA->MODER &= ~(0x00000003 << (5 * 2));
 	GPIOA->MODER |= (0x00000000 << (5 * 2));
 
 	//uint16_t val = GPIOC->IDR & (0x0001 << 0);
 
-	// C1 left
+	// C4
 	GPIOC->MODER &= ~(0x00000003 << (4 * 2));
 	GPIOC->MODER |= (0x00000000 << (4 * 2));
 

@@ -4,6 +4,8 @@
  *  Created on: 13. jun. 2021
  *      Author: Bruger
  */
+#define Height 7
+#define Width 10
 
 #include "stm32f30x_conf.h" // STM32 config
 #include "30010_io.h" 		// Input/output library for this course
@@ -11,7 +13,9 @@
 #include "player.h"
 #include "main.h"
 #include "string.h"
+#include "projectile.h"
 #include "thorTing.h"
+#include "math.h"
 
 void drawAsteroid(struct asteroid *a, int32_t x1, int32_t y1, int32_t size1) {
 	fgcolor(15);
@@ -64,11 +68,11 @@ void gravity (struct player2_t *p, struct asteroid a) {
 	fgcolor(0);
 }
 
-int32_t projDist (struct projectile_t proj, struct asteroid a) {
+int32_t projDist (struct projectile_t *proj, struct asteroid a) {
 	int32_t lang, kort;
 	// x og y-koordinater fra spiller til asteroide
-	int32_t distX = ((a.x << FIX14_SHIFT) - proj.posX);
-	int32_t distY = ((a.y << FIX14_SHIFT) - proj.posY);
+	int32_t distX = ((a.x << FIX14_SHIFT) - proj->posX);
+	int32_t distY = ((a.y << FIX14_SHIFT) - proj->posY);
 
 	if (distX < 0) distX *= -1;
 	if (distY < 0) distY *= -1;
@@ -85,11 +89,11 @@ int32_t projDist (struct projectile_t proj, struct asteroid a) {
 	return approxShift14(distTotal);
 }
 
-int32_t astDist (struct player2_t p, struct asteroid a) {
+int32_t astDist (struct player2_t *p, struct asteroid a) {
 	int32_t lang, kort;
 	// x og y-koordinater fra spiller til asteroide
-	int32_t distX = ((a.x << FIX14_SHIFT) - p.posX);
-	int32_t distY = ((a.y << FIX14_SHIFT) - p.posY);
+	int32_t distX = ((a.x << FIX14_SHIFT) - p->posX);
+	int32_t distY = ((a.y << FIX14_SHIFT) - p->posY);
 
 	if (distX < 0) distX *= -1;
 	if (distY < 0) distY *= -1;
@@ -107,10 +111,10 @@ int32_t astDist (struct player2_t p, struct asteroid a) {
 	return approxShift14(distTotal);
 }
 
-int collisionPlayer (struct player2_t p, struct asteroid a) {
+int32_t collisionPlayer (struct player2_t *p, struct asteroid a) {
 	int c = 0;
-	int playerX = p.posX >> 14;
-	int playerY = p.posY >> 14;
+	int playerX = p->posX >> 14;
+	int playerY = p->posY >> 14;
 	int32_t i;
 
 	if (astDist(p,a) < a.size * 2) {
@@ -148,10 +152,10 @@ int collisionPlayer (struct player2_t p, struct asteroid a) {
 	return c;
 }
 
-int collisionProjectile (struct projectile_t p, struct asteroid a) {
+int32_t collisionProjectile (struct projectile_t *p, struct asteroid a) {
 	int c = 0;
-	int playerX = p.posX >> 14;
-	int playerY = p.posY >> 14;
+	int playerX = p->posX >> 14;
+	int playerY = p->posY >> 14;
 	int32_t i;
 
 	if (projDist(p,a) < a.size * 2) {

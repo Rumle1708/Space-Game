@@ -11,6 +11,7 @@
 #include "math.h"
 #include "ansi.h"
 #include "thorTing.h"
+#include "projectile.h"
 
 void initProjectiles(struct projectile_t *p){
 	for(int32_t i = 0; i < ENTITIES; i++){
@@ -20,11 +21,10 @@ void initProjectiles(struct projectile_t *p){
 		p[i].velY = 0;
 		p[i].alive = 0;
 		p[i].time = 0;
-
 	}
 }
 
-void updateProjectiles(struct projectile_t *p){
+void updateProjectiles(struct projectile_t *p, struct asteroid asteroid1, struct asteroid asteroid2){
 
 	fgcolor(1);
 
@@ -40,7 +40,7 @@ void updateProjectiles(struct projectile_t *p){
 			int32_t x = approxShift14(p[i].posX);
 			int32_t y = approxShift14(p[i].posY);
 
-			if(p[i].time > 24 || (x < (X1 + 1)) || (x > (X2 - 1)) || (y < (Y1 + 1)) || (y > (Y2 - 1))){
+			if(p[i].time > 24 || (x < (X1 + 1)) || (x > (X2 - 1)) || (y < (Y1 + 1)) || (y > (Y2 - 1)) || collisionProjectile(&p[i],asteroid1) || collisionProjectile(&p[i],asteroid2)){
 
 				p[i].alive = 0;
 				p[i].time = 0;

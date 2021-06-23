@@ -119,99 +119,26 @@ int main(void){
 					break;
 				}
 
-
-
 				if (switches == 3 || switches == 1){
 					spawnProjectile(&proj,&p1);
+
 				}
 
 				if (switches == 2 || switches == 3){
 					spawnProjectile(&proj,&p2);
 				}
 
+				updateProjectiles(&proj,asteroid1,asteroid2);
 
-				for(int32_t i = 0; i < ENTITIES; i++){
-
-					if((collisionProjectile(proj[i], asteroid1) || collisionProjectile(proj[i], asteroid2)) && proj[i].alive){
-
-						proj[i].alive = 0;
-						proj[i].time = 0;
-
-					}
-
-				}
+				movePlayer(&p1, &p2, asteroid1, asteroid2);
 
 
-				updateProjectiles(&proj);
-
-				if(asteroid1.size != 0){
-
-					gravity(&p1, asteroid1);
-
-					gravity(&p2, asteroid1);
-
-				}
-
-				if(asteroid2.size != 0){
-
-					gravity(&p1, asteroid2);
-
-					gravity(&p2, asteroid2);
-
-				}
-
-
-				updatePlayer(&p1, readADC(2), readADC(1));
-
-				updatePlayer(&p2, readADC(4), readADC(3));
-
-
-				powerupUpdate(&powerup1, &p1);
-
-				powerupUpdate(&powerup2, &p1);
-
-				powerupUpdate(&powerup1, &p2);
-
-				powerupUpdate(&powerup2, &p2);
-
+				checkPowerup(&powerup1, &powerup2, &p1, &p2);
 
 
 				impactDetection(&p1, &proj);
 
 				impactDetection(&p2, &proj);
-
-
-
-				if(asteroid1.size > 0){
-
-					if(collisionPlayer(p1, asteroid1)){
-
-						p1.lives = 0;
-					}
-
-					if(collisionPlayer(p2, asteroid1)){
-
-						p2.lives = 0;
-
-					}
-
-				}
-
-				if(asteroid2.size > 0){
-
-					if(collisionPlayer(p1, asteroid2)){
-
-						p1.lives = 0;
-
-					}
-
-					if(collisionPlayer(p2, asteroid2)){
-
-						p2.lives = 0;
-
-					}
-
-				}
 
 
 				printLives(p1, 0);
@@ -222,18 +149,6 @@ int main(void){
 				fflush(stdout);
 
 				time += (1 << 14) / 24;
-
-				gotoxy(10,10);
-
-				/*
-
-				fgcolor(15);
-
-				printFix(expand(time));
-
-				fgcolor(0);
-
-				*/
 
 				global = 0;
 			}
