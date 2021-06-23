@@ -41,19 +41,19 @@ void printLeaderboard(int32_t p1Wins, int32_t p2Wins, int32_t leaderboard[100][2
 
 	fgcolor(15);
 
-	gotoxy(110,18);
+	gotoxy(110,25);
 
 	printf("Wins:");
 
-	gotoxy(110,20);
+	gotoxy(110,27);
 
 	printf("Player 1 wins: %ld", p1Wins);
 
-	gotoxy(110,21);
+	gotoxy(110,28);
 
 	printf("Player 2 wins: %ld", p2Wins);
 
-	gotoxy(110,23);
+	gotoxy(110,30);
 
 	printf("Highscores:");
 
@@ -61,7 +61,7 @@ void printLeaderboard(int32_t p1Wins, int32_t p2Wins, int32_t leaderboard[100][2
 
 		if(leaderboard[i][1] != 0 && leaderboard[i][0] != 0){
 
-			gotoxy(110,25 + i);
+			gotoxy(110,32 + i);
 
 			printf("%ld, Player: %ld, Time: ", i + 1, leaderboard[i][1]);
 

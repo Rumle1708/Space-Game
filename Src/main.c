@@ -18,7 +18,6 @@
 #include "leaderboard.h"
 #include "playerLives.h"
 
-
 #define X1 1
 #define Y1 1
 #define X2 255
@@ -75,13 +74,19 @@ int main(void){
 
 	struct asteroid asteroid1, asteroid2;
 
-
+	clrscr();
 
 	while(1){
 
 		int32_t time = 0;
 
 		clrscr();
+
+		fgcolor(1);
+
+		titleScreen("xwing versus");
+
+		fgcolor(0);
 
 		printLeaderboard(p1Wins, p2Wins, leaderboard);
 
@@ -90,6 +95,12 @@ int main(void){
 		while((p1.lives > 0) && (p2.lives > 0)){
 
 			if (global != 0){
+
+				if(readJoystick() != 0){
+
+					initBoss();
+
+				}
 
 				int32_t switches = readSwitches();
 
@@ -227,7 +238,6 @@ int main(void){
 				global = 0;
 			}
 		}
-
 
 		if(p1.lives != 0){
 

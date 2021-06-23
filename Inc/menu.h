@@ -10,5 +10,6 @@
 
 void gameMenu();
 void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5][5], struct projectile_t *proj, struct powerup *pUp1, struct powerup *pUp2, struct asteroid *asteroid1, struct asteroid *asteroid2);
+void initBoss();
 
 #endif /* MENU_H_ */

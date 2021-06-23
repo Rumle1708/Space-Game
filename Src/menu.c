@@ -16,6 +16,11 @@
 #include "thorTing.h"
 
 void printHelp(){
+
+	clrscr();
+
+	fgcolor(15);
+
 	printf("Putty settings:\n");
 	printf("Baudrate: 115200\n");
 	printf("Columns: 256\n");
@@ -25,6 +30,9 @@ void printHelp(){
 	printf("\n");
 	printf("System requirements:\n");
 	printf(" \n");
+
+	fgcolor(0);
+
 }
 
 int32_t gameMenu(){
@@ -36,9 +44,9 @@ int32_t gameMenu(){
 			switch (state){
 			case 0:
 				lcd_write_string("Choose level:", 0, 0);
-				lcd_write_string("> Asteroids", 0, 1);
+				lcd_write_string("> Asteroid", 0, 1);
 				lcd_write_string("  Star Destruction", 0, 2);
-				lcd_write_string("  Black Hole", 0, 3);
+				lcd_write_string("  Deep space", 0, 3);
 				while (i == 0){
 					i = readJoystick();
 				}
@@ -53,9 +61,9 @@ int32_t gameMenu(){
 				break;
 			case 1:
 				lcd_write_string("Choose level:", 0, 0);
-				lcd_write_string("  Asteroids", 0, 1);
+				lcd_write_string("  Asteroid", 0, 1);
 				lcd_write_string("> Star Destruction", 0, 2);
-				lcd_write_string("  Black Hole", 0, 3);
+				lcd_write_string("  Deep space", 0, 3);
 				while (i == 0){
 					i = readJoystick();
 				}
@@ -70,9 +78,9 @@ int32_t gameMenu(){
 				break;
 			case 2:
 				lcd_write_string("Choose level:", 0, 0);
-				lcd_write_string("  Asteroids", 0, 1);
+				lcd_write_string("  Asteroid", 0, 1);
 				lcd_write_string("  Star Destruction", 0, 2);
-				lcd_write_string("> Black Hole", 0, 3);
+				lcd_write_string("> Deep space", 0, 3);
 				while (i == 0){
 					i = readJoystick();
 				}
@@ -118,7 +126,9 @@ int32_t gameMenu(){
 				lcd_write_string("on terminal.", 0, 1);
 				lcd_write_string("Press any key", 0, 2);
 				lcd_write_string("to continue!", 0, 3);
+
 				printHelp();
+
 				while (i == 0){
 					i = readJoystick();
 				}
@@ -147,7 +157,7 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 	int32_t i = gameMenu();
 	if (CHECK_BIT(i,0)){
 
-		// asteroids
+		// asteroid
 
 		initPlayer(p1, 50, 10, 0, sprite,1);
 		initPlayer(p2, 100, 10, 180, sprite,2);
@@ -163,9 +173,9 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 		// star destroyer
 
 		initPlayer(p1, 50, 10, 0, sprite,1);
-		initPlayer(p2, 100, 10, 180, sprite,2);
+		initPlayer(p2, 200, 80, 180, sprite,2);
 
-		powerupInit(pUp1, 100, 50, 1);
+		powerupInit(pUp1, 100, 40, 1);
 		powerupInit(pUp2, 100, 80, 2);
 
 		drawAsteroid(asteroid1, 200, 20, 15);
@@ -177,7 +187,7 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 		// black hole
 
 		initPlayer(p1, 50, 10, 0, sprite,1);
-		initPlayer(p2, 100, 10, 180, sprite,2);
+		initPlayer(p2, 200, 80, 180, sprite,2);
 
 		powerupInit(pUp1, 100, 50, 1);
 		powerupInit(pUp2, 150, 20, 2);
@@ -185,9 +195,122 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 		drawAsteroid(asteroid1, 0, 0, 0);
 		drawAsteroid(asteroid2, 0, 0, 0);
 
-
-
 	}
 
 	initProjectiles(proj);
+}
+
+void initBoss(){
+	global = 0;
+	bgcolor(7);
+	fgcolor(0);
+	clrscr();
+	printf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin eleifend diam ultrices semper. Phasellus efficitur id leo sed\n");
+	printf("viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eget fringilla tellus. Quisque\n");
+	printf("euismod viverra dui ac sagittis. Nullam dictum euismod dui sed luctus. Nulla sodales vulputate vulputate. Curabitur consectetur dapibus\n");
+	printf("nunc, consequat malesuada purus rhoncus nec. Aliquam sem felis, congue id diam sed, porttitor tincidunt nunc. Duis ante purus, \n");
+	printf("fermentum vitae vulputate ac, tincidunt vitae dui. Morbi tristique tempus purus, a tincidunt tellus lacinia in. Etiam a nisi malesuada, finibus\n");
+	printf("ex at, finibus purus. Integer ac nisi vitae ex faucibus euismod. Suspendisse dapibus diam eu pellentesque tempor. In fermentum et lectus \n");
+	printf("sit amet gravida.\n");
+	printf("\n");
+	printf("\n");
+	printf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin eleifend diam ultrices semper. Phasellus efficitur id leo sed\n");
+	printf("viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eget fringilla tellus. Quisque\n");
+	printf("euismod viverra dui ac sagittis. Nullam dictum euismod dui sed luctus. Nulla sodales vulputate vulputate. Curabitur consectetur dapibus\n");
+	printf("nunc, consequat malesuada purus rhoncus nec. Aliquam sem felis, congue id diam sed, porttitor tincidunt nunc. Duis ante purus, \n");
+	printf("fermentum vitae vulputate ac, tincidunt vitae dui. Morbi tristique tempus purus, a tincidunt tellus lacinia in. Etiam a nisi malesuada, finibus\n");
+	printf("ex at, finibus purus. Integer ac nisi vitae ex faucibus euismod. Suspendisse dapibus diam eu pellentesque tempor. In fermentum et lectus \n");
+	printf("sit amet gravida.\n");
+	printf("\n");
+	printf("\n");
+	printf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin eleifend diam ultrices semper. Phasellus efficitur id leo sed\n");
+	printf("viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eget fringilla tellus. Quisque\n");
+	printf("euismod viverra dui ac sagittis. Nullam dictum euismod dui sed luctus. Nulla sodales vulputate vulputate. Curabitur consectetur dapibus\n");
+	printf("nunc, consequat malesuada purus rhoncus nec. Aliquam sem felis, congue id diam sed, porttitor tincidunt nunc. Duis ante purus, \n");
+	printf("fermentum vitae vulputate ac, tincidunt vitae dui. Morbi tristique tempus purus, a tincidunt tellus lacinia in. Etiam a nisi malesuada, finibus\n");
+	printf("ex at, finibus purus. Integer ac nisi vitae ex faucibus euismod. Suspendisse dapibus diam eu pellentesque tempor. In fermentum et lectus \n");
+	printf("sit amet gravida.\n");
+	printf("\n");
+	printf("\n");
+	printf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin eleifend diam ultrices semper. Phasellus efficitur id leo sed\n");
+	printf("viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eget fringilla tellus. Quisque\n");
+	printf("euismod viverra dui ac sagittis. Nullam dictum euismod dui sed luctus. Nulla sodales vulputate vulputate. Curabitur consectetur dapibus\n");
+	printf("nunc, consequat malesuada purus rhoncus nec. Aliquam sem felis, congue id diam sed, porttitor tincidunt nunc. Duis ante purus, \n");
+	printf("fermentum vitae vulputate ac, tincidunt vitae dui. Morbi tristique tempus purus, a tincidunt tellus lacinia in. Etiam a nisi malesuada, finibus\n");
+	printf("ex at, finibus purus. Integer ac nisi vitae ex faucibus euismod. Suspendisse dapibus diam eu pellentesque tempor. In fermentum et lectus \n");
+	printf("sit amet gravida.\n");
+	printf("\n");
+	printf("\n");
+	printf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin eleifend diam ultrices semper. Phasellus efficitur id leo sed\n");
+	printf("viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eget fringilla tellus. Quisque\n");
+	printf("euismod viverra dui ac sagittis. Nullam dictum euismod dui sed luctus. Nulla sodales vulputate vulputate. Curabitur consectetur dapibus\n");
+	printf("nunc, consequat malesuada purus rhoncus nec. Aliquam sem felis, congue id diam sed, porttitor tincidunt nunc. Duis ante purus, \n");
+	printf("fermentum vitae vulputate ac, tincidunt vitae dui. Morbi tristique tempus purus, a tincidunt tellus lacinia in. Etiam a nisi malesuada, finibus\n");
+	printf("ex at, finibus purus. Integer ac nisi vitae ex faucibus euismod. Suspendisse dapibus diam eu pellentesque tempor. In fermentum et lectus \n");
+	printf("sit amet gravida.\n");
+	printf("\n");
+	printf("\n");
+	printf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin eleifend diam ultrices semper. Phasellus efficitur id leo sed\n");
+	printf("viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eget fringilla tellus. Quisque\n");
+	printf("euismod viverra dui ac sagittis. Nullam dictum euismod dui sed luctus. Nulla sodales vulputate vulputate. Curabitur consectetur dapibus\n");
+	printf("nunc, consequat malesuada purus rhoncus nec. Aliquam sem felis, congue id diam sed, porttitor tincidunt nunc. Duis ante purus, \n");
+	printf("fermentum vitae vulputate ac, tincidunt vitae dui. Morbi tristique tempus purus, a tincidunt tellus lacinia in. Etiam a nisi malesuada, finibus\n");
+	printf("ex at, finibus purus. Integer ac nisi vitae ex faucibus euismod. Suspendisse dapibus diam eu pellentesque tempor. In fermentum et lectus \n");
+	printf("sit amet gravida.\n");
+	printf("\n");
+	printf("\n");
+	printf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin eleifend diam ultrices semper. Phasellus efficitur id leo sed\n");
+	printf("viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eget fringilla tellus. Quisque\n");
+	printf("euismod viverra dui ac sagittis. Nullam dictum euismod dui sed luctus. Nulla sodales vulputate vulputate. Curabitur consectetur dapibus\n");
+	printf("nunc, consequat malesuada purus rhoncus nec. Aliquam sem felis, congue id diam sed, porttitor tincidunt nunc. Duis ante purus, \n");
+	printf("fermentum vitae vulputate ac, tincidunt vitae dui. Morbi tristique tempus purus, a tincidunt tellus lacinia in. Etiam a nisi malesuada, finibus\n");
+	printf("ex at, finibus purus. Integer ac nisi vitae ex faucibus euismod. Suspendisse dapibus diam eu pellentesque tempor. In fermentum et lectus \n");
+	printf("sit amet gravida.\n");
+	printf("\n");
+	printf("\n");
+	printf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin eleifend diam ultrices semper. Phasellus efficitur id leo sed\n");
+	printf("viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eget fringilla tellus. Quisque\n");
+	printf("euismod viverra dui ac sagittis. Nullam dictum euismod dui sed luctus. Nulla sodales vulputate vulputate. Curabitur consectetur dapibus\n");
+	printf("nunc, consequat malesuada purus rhoncus nec. Aliquam sem felis, congue id diam sed, porttitor tincidunt nunc. Duis ante purus, \n");
+	printf("fermentum vitae vulputate ac, tincidunt vitae dui. Morbi tristique tempus purus, a tincidunt tellus lacinia in. Etiam a nisi malesuada, finibus\n");
+	printf("ex at, finibus purus. Integer ac nisi vitae ex faucibus euismod. Suspendisse dapibus diam eu pellentesque tempor. In fermentum et lectus \n");
+	printf("sit amet gravida.\n");
+	printf("\n");
+	printf("\n");
+	printf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin eleifend diam ultrices semper. Phasellus efficitur id leo sed\n");
+	printf("viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eget fringilla tellus. Quisque\n");
+	printf("euismod viverra dui ac sagittis. Nullam dictum euismod dui sed luctus. Nulla sodales vulputate vulputate. Curabitur consectetur dapibus\n");
+	printf("nunc, consequat malesuada purus rhoncus nec. Aliquam sem felis, congue id diam sed, porttitor tincidunt nunc. Duis ante purus, \n");
+	printf("fermentum vitae vulputate ac, tincidunt vitae dui. Morbi tristique tempus purus, a tincidunt tellus lacinia in. Etiam a nisi malesuada, finibus\n");
+	printf("ex at, finibus purus. Integer ac nisi vitae ex faucibus euismod. Suspendisse dapibus diam eu pellentesque tempor. In fermentum et lectus \n");
+	printf("sit amet gravida.\n");
+	printf("\n");
+	printf("\n");
+	printf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin eleifend diam ultrices semper. Phasellus efficitur id leo sed\n");
+	printf("viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eget fringilla tellus. Quisque\n");
+	printf("euismod viverra dui ac sagittis. Nullam dictum euismod dui sed luctus. Nulla sodales vulputate vulputate. Curabitur consectetur dapibus\n");
+	printf("nunc, consequat malesuada purus rhoncus nec. Aliquam sem felis, congue id diam sed, porttitor tincidunt nunc. Duis ante purus, \n");
+	printf("fermentum vitae vulputate ac, tincidunt vitae dui. Morbi tristique tempus purus, a tincidunt tellus lacinia in. Etiam a nisi malesuada, finibus\n");
+	printf("ex at, finibus purus. Integer ac nisi vitae ex faucibus euismod. Suspendisse dapibus diam eu pellentesque tempor. In fermentum et lectus \n");
+	printf("sit amet gravida.\n");
+	printf("\n");
+	printf("\n");
+	printf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin eleifend diam ultrices semper. Phasellus efficitur id leo sed\n");
+	printf("viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eget fringilla tellus. Quisque\n");
+	printf("euismod viverra dui ac sagittis. Nullam dictum euismod dui sed luctus. Nulla sodales vulputate vulputate. Curabitur consectetur dapibus\n");
+	printf("nunc, consequat malesuada purus rhoncus nec. Aliquam sem felis, congue id diam sed, porttitor tincidunt nunc. Duis ante purus, \n");
+	printf("fermentum vitae vulputate ac, tincidunt vitae dui. Morbi tristique tempus purus, a tincidunt tellus lacinia in. Etiam a nisi malesuada, finibus\n");
+	printf("ex at, finibus purus. Integer ac nisi vitae ex faucibus euismod. Suspendisse dapibus diam eu pellentesque tempor. In fermentum et lectus \n");
+	printf("sit amet gravida.\n");
+	printf("\n");
+	printf("\n");
+	lcd_write_string("Press reset on board", 0, 0);
+	lcd_write_string("when boos is no", 0, 1);
+	lcd_write_string("longer present.", 0, 2);
+	lcd_write_string("", 0, 3);
+
+	bgcolor(0);
+
+	fflush(stdout);
+	while (1);
 }

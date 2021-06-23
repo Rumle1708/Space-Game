@@ -248,52 +248,64 @@ void drawWindowNoTitle(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint3
 }
 
 void drawGameTitle(uint32_t x2, uint32_t y2){
-	int32_t i, j;
+    int32_t i, j;
 
-	setRGBColorBG(128,128,128);
-	gotoxy(1,y2 + 1);
-	for (i = 0; i < 24; i++){
-		for (j = 0; j < x2; j++){
-			printf(" ");
-		}
-		printf("\n");
-	}
+    setRGBColorBG(128,128,128);
+    gotoxy(1,y2 + 1);
+    for (i = 0; i < 24; i++){
+        for (j = 0; j < x2; j++){
+            printf(" ");
+        }
+        printf("\n");
+    }
 
-	setRGBColorBG(210,0,0);
-	drawSquare(3,2,3,y2 + 3);
-	drawSquare(3,2,8,y2 + 3);
-	drawSquare(3,2,13,y2 + 3);
-	setRGBColorBG(210,210,0);
-	drawSquare(3,2,18,y2 + 3);
-	drawSquare(3,2,23,y2 + 3);
-	drawSquare(3,2,28,y2 + 3);
-	setRGBColorBG(0,210,0);
-	drawSquare(3,2,33,y2 + 3);
-	drawSquare(3,2,38,y2 + 3);
-	drawSquare(3,2,43,y2 + 3);
-	drawSquare(3,2,48,y2 + 3);
+    setRGBColorBG(210,0,0);
+    drawSquare(3,2,3,y2 + 3);
+    drawSquare(3,2,8,y2 + 3);
+    drawSquare(3,2,13,y2 + 3);
+    setRGBColorBG(210,210,0);
+    drawSquare(3,2,18,y2 + 3);
+    drawSquare(3,2,23,y2 + 3);
+    drawSquare(3,2,28,y2 + 3);
+    setRGBColorBG(0,210,0);
+    drawSquare(3,2,33,y2 + 3);
+    drawSquare(3,2,38,y2 + 3);
+    drawSquare(3,2,43,y2 + 3);
+    drawSquare(3,2,48,y2 + 3);
 
-	setRGBColorBG(100,0,0);
-	drawCircle(1,14, y2 + 15);
-	drawCircle(2,14, y2 + 15);
-	drawCircle(3,14, y2 + 15);
-	drawCircle(4,14, y2 + 15);
-	setRGBColorBG(0,0,0);
-	drawCircle(5,14, y2 + 15);
+    setRGBColorBG(100,0,0);
+    drawCircle(1,14, y2 + 15);
+    drawCircle(2,14, y2 + 15);
+    drawCircle(3,14, y2 + 15);
+    drawCircle(4,14, y2 + 15);
+    setRGBColorBG(0,0,0);
+    drawCircle(5,14, y2 + 15);
 
-	setRGBColorBG(0,128,0);
-	drawCircle(1,40, y2 + 15);
-	drawCircle(2,40, y2 + 15);
-	drawCircle(3,40, y2 + 15);
-	drawCircle(4,40, y2 + 15);
-	setRGBColorBG(0,0,0);
-	drawCircle(5,40, y2 + 15);
+    setRGBColorBG(0,128,0);
+    drawCircle(1,40, y2 + 15);
+    drawCircle(2,40, y2 + 15);
+    drawCircle(3,40, y2 + 15);
+    drawCircle(4,40, y2 + 15);
+    setRGBColorBG(0,0,0);
+    drawCircle(5,40, y2 + 15);
 
-	drawWindowNoTitle(x2 - 60, y2 + 2, x2 - 4, y2 + 22, 0);
-	setRGBColorBG(0,128,128);
-	drawSquare(55, 19, x2 - 59, y2 + 3);
+    drawWindowNoTitle(x2 - 60, y2 + 2, x2 - 4, y2 + 22, 0);
+    setRGBColorBG(0,128,128);
+    drawSquare(55, 19, x2 - 59, y2 + 3);
+    gotoxy(x2 - 59,y2 + 4);
+    printf("Quantum engine warming up.........................done");
+    gotoxy(x2 - 59,y2 + 6);
+    printf("Checking fuel level...............................done");
+    gotoxy(x2 - 59,y2 + 8);
+    printf("Routing power to space radar......................done");
+    gotoxy(x2 - 59,y2 + 10);
+    printf("Checking enemy presence...........................done");
+    gotoxy(x2 - 59,y2 + 12);
+    printf("Engaging on ship weapon system....................done");
+    gotoxy(x2 - 59,y2 + 14);
+    printf("Measuring gravitational force.....................done");
 
-
-	setRGBColorBG(0,0,0);
+    setRGBColorBG(0,0,0);
 }
+
 

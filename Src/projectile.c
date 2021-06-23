@@ -58,7 +58,6 @@ void updateProjectiles(struct projectile_t *p){
 
 			printf("%c",0x20);
 
-
 		}
 
 	}
