@@ -3,28 +3,19 @@
 #include "main.h"
 #include "math.h"
 
-// Approximates a fixed point number to the nearest integer
 int32_t approxShift14(int32_t n){
+	// Approximates a fixed point number to the nearest integer
 	int32_t temp = n;
-
 	n &= ~(0x3FFF);
-
 	//Resets all decimal bits of number
-
 	n >>= FIX14_SHIFT;
-
 	//Shifts real part
-
 	temp &= ~(0xFFFFC000);
-
 	// Resets all non-decimal bits
-
 	if(temp >= 0x2000){
 		n++;
 	}
-
 	// Checks if decimal part is over 0.5
-
 	return n;
 }
 
@@ -39,6 +30,7 @@ return i >> 2;
 }
 
 int32_t degCon(int32_t angle){
+	// Converts a value in degrees to 0-512 value
 	int32_t a = 512 * angle / 360;
 	while (a > 512){
 		a -= 512;
@@ -50,11 +42,13 @@ int32_t degCon(int32_t angle){
 }
 
 int32_t sinus(int32_t angle){
+	// Returns sin value from look-up-table
 	int32_t a = degCon(angle);
 	return SIN[a];
 }
 
 int32_t cosinus(int32_t angle){
+	// Returns cos value from look-up-table
 	int32_t a = degCon(angle + 90);
 	return SIN[a];
 }
@@ -70,6 +64,7 @@ void printFix(int32_t i) {
 }
 
 const signed short SIN[512]=
+		// Look-up-table with values of sin from 0-512
 {
 	0x0000,0x00C9,0x0192,0x025B,0x0324,0x03ED,0x04B5,0x057E,
 	0x0646,0x070E,0x07D6,0x089D,0x0964,0x0A2B,0x0AF1,0x0BB7,

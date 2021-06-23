@@ -10,28 +10,38 @@
 
 void initADC(){
 
+	// Enable clocks for input pins
+
 	RCC->AHBENR |= RCC_AHBPeriph_GPIOA;
 	RCC->AHBENR |= RCC_AHBPeriph_GPIOB;
 
-	GPIOA->MODER &= ~(0x00000003 << (6 * 2));
-	GPIOA->MODER |= (0x00000000 << (6 * 2));
-	GPIOA->PUPDR &= ~(0x00000003 << (6 * 2));
-	GPIOA->PUPDR |= (0x00000002 << (6 * 2));
+	// Pin A6
 
-	GPIOA->MODER &= ~(0x00000003 << (7 * 2));
-	GPIOA->MODER |= (0x00000000 << (7 * 2));
-	GPIOA->PUPDR &= ~(0x00000003 << (7 * 2));
-	GPIOA->PUPDR |= (0x00000002 << (7 * 2));
+	GPIOA->MODER &= ~(0x00000003 << (6 * 2));	// Clear mode register
+	GPIOA->MODER |= (0x00000000 << (6 * 2)); 	// Set mode register
+	GPIOA->PUPDR &= ~(0x00000003 << (6 * 2));	// Clear push/pull register
+	GPIOA->PUPDR |= (0x00000002 << (6 * 2));	// Set push/pull register
 
-	GPIOB->MODER &= ~(0x00000003 << (1 * 2));
-	GPIOB->MODER |= (0x00000000 << (1 * 2));
-	GPIOB->PUPDR &= ~(0x00000003 << (1 * 2));
-	GPIOB->PUPDR |= (0x00000002 << (1 * 2));
+	// Pin A7
 
-	GPIOB->MODER &= ~(0x00000003 << (11 * 2));
-	GPIOB->MODER |= (0x00000000 << (11 * 2));
-	GPIOB->PUPDR &= ~(0x00000003 << (11 * 2));
-	GPIOB->PUPDR |= (0x00000002 << (11 * 2));
+	GPIOA->MODER &= ~(0x00000003 << (7 * 2));	// Clear mode register
+	GPIOA->MODER |= (0x00000000 << (7 * 2));	// Set mode register
+	GPIOA->PUPDR &= ~(0x00000003 << (7 * 2));	// Clear push/pull register
+	GPIOA->PUPDR |= (0x00000002 << (7 * 2));	// Set push/pull register
+
+	// Pin B1
+
+	GPIOB->MODER &= ~(0x00000003 << (1 * 2));	// Clear mode register
+	GPIOB->MODER |= (0x00000000 << (1 * 2));	// Set mode register
+	GPIOB->PUPDR &= ~(0x00000003 << (1 * 2));	// Clear push/pull register
+	GPIOB->PUPDR |= (0x00000002 << (1 * 2));	// Set push/pull register
+
+	// Pin B11
+
+	GPIOB->MODER &= ~(0x00000003 << (11 * 2));	// Clear mode register
+	GPIOB->MODER |= (0x00000000 << (11 * 2));	// Set mode register
+	GPIOB->PUPDR &= ~(0x00000003 << (11 * 2));	// Clear push/pull register
+	GPIOB->PUPDR |= (0x00000002 << (11 * 2));	// Set push/pull register
 
 
 	RCC->CFGR2 &= ~RCC_CFGR2_ADCPRE12; // Clear ADC12 prescaler bits
@@ -56,8 +66,9 @@ void initADC(){
 	while (!(ADC1->ISR & 0x00000001)); // Wait until ready
 }
 
-uint32_t readADC(uint32_t channel){
 
+uint32_t readADC(uint32_t channel){
+	// Function selecting which channel of ADC to read input 1 to 4
 	switch(channel){
 	case 1:
 		ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_1Cycles5);

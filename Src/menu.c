@@ -16,33 +16,28 @@
 #include "thorTing.h"
 
 void printHelp(){
-
+// Prints help screen
 	clrscr();
-
 	fgcolor(15);
-
+	// Recommended PuTTY setting
 	printf("Putty settings:\n");
 	printf("Baudrate: 115200\n");
 	printf("Columns: 256\n");
 	printf("Rows: 100\n");
 	printf("Font size: 3\n");
-	printf("\n");
-	printf("\n");
-	printf("System requirements:\n");
-	printf(" \n");
-
 	fgcolor(0);
-
 }
 
 int32_t gameMenu(){
 	// Choose level:
 	int32_t state = 0, i = 0, IO = 0;
 	while(!(CHECK_BIT(IO,3))){
-		if (global >= 12){
+		if (global >= 12){ // Delay of 0.5 seconds to reduced scroll speed
 			i = 0;
 			switch (state){
+			// Menu is build similar to a state machine
 			case 0:
+				// Map selection
 				lcd_write_string("Choose level:", 0, 0);
 				lcd_write_string("> Asteroid", 0, 1);
 				lcd_write_string("  Star Destruction", 0, 2);
@@ -50,16 +45,17 @@ int32_t gameMenu(){
 				while (i == 0){
 					i = readJoystick();
 				}
-				if (CHECK_BIT(i,1)){
+				if (CHECK_BIT(i,1)){ // Next state
 					state++;
-				} else if (CHECK_BIT(i,0)){
+				} else if (CHECK_BIT(i,0)){ // Previous state
 					state = 2;
-				} else if (CHECK_BIT(i,4)){
+				} else if (CHECK_BIT(i,4)){ // Help state
 					state = 3;
 					IO ^= 1 << 0; // Foerste bit er taendt for level 1
 				}
 				break;
 			case 1:
+				// Map selection
 				lcd_write_string("Choose level:", 0, 0);
 				lcd_write_string("  Asteroid", 0, 1);
 				lcd_write_string("> Star Destruction", 0, 2);
@@ -67,16 +63,17 @@ int32_t gameMenu(){
 				while (i == 0){
 					i = readJoystick();
 				}
-				if (CHECK_BIT(i,1)){
+				if (CHECK_BIT(i,1)){ // Next state
 					state++;
-				} else if (CHECK_BIT(i,0)){
+				} else if (CHECK_BIT(i,0)){ // Previous state
 					state--;
-				} else if (CHECK_BIT(i,4)){
+				} else if (CHECK_BIT(i,4)){ // Help state
 					state = 3;
 					IO ^= 1 << 1; // Anden bit er taendt for level 2
 				}
 				break;
 			case 2:
+				// Map selection
 				lcd_write_string("Choose level:", 0, 0);
 				lcd_write_string("  Asteroid", 0, 1);
 				lcd_write_string("  Star Destruction", 0, 2);
@@ -84,16 +81,17 @@ int32_t gameMenu(){
 				while (i == 0){
 					i = readJoystick();
 				}
-				if (CHECK_BIT(i,1)){
+				if (CHECK_BIT(i,1)){ // Next state
 					state = 0;
-				} else if (CHECK_BIT(i,0)){
+				} else if (CHECK_BIT(i,0)){ // Previous state
 					state--;
-				} else if (CHECK_BIT(i,4)){
+				} else if (CHECK_BIT(i,4)){ // Help state
 					state = 3;
 					IO ^= 1 << 2; // Tredje bit er taendt for level 3
 				}
 				break;
 			case 3:
+				// Help state
 				lcd_write_string("Do you need help?", 0, 0);
 				lcd_write_string("> No", 0, 1);
 				lcd_write_string("  Yes", 0, 2);
@@ -101,13 +99,14 @@ int32_t gameMenu(){
 				while (i == 0){
 					i = readJoystick();
 				}
-				if (CHECK_BIT(i,1) || CHECK_BIT(i,0)){
+				if (CHECK_BIT(i,1) || CHECK_BIT(i,0)){  // Next state
 					state = 4;
-				} else if (CHECK_BIT(i,4)){
+				} else if (CHECK_BIT(i,4)){ // Final state
 					state = 6;
 				}
 				break;
 			case 4:
+				// Help state
 				lcd_write_string("Do you need help?", 0, 0);
 				lcd_write_string("  No", 0, 1);
 				lcd_write_string("> Yes", 0, 2);
@@ -115,13 +114,14 @@ int32_t gameMenu(){
 				while (i == 0){
 					i = readJoystick();
 				}
-				if (CHECK_BIT(i,1) || CHECK_BIT(i,0)){
+				if (CHECK_BIT(i,1) || CHECK_BIT(i,0)){  // Next state
 					state = 3;
-				} else if (CHECK_BIT(i,4)){
+				} else if (CHECK_BIT(i,4)){ // Final state
 					state = 5;
 				}
 				break;
 			case 5:
+				// Help display state
 				lcd_write_string("Help is displayed", 0, 0);
 				lcd_write_string("on terminal.", 0, 1);
 				lcd_write_string("Press any key", 0, 2);
@@ -135,11 +135,13 @@ int32_t gameMenu(){
 				state = 6;
 				break;
 			case 6:
+				// Clears LCD
 				lcd_write_string("", 0, 0);
 				lcd_write_string("", 0, 1);
 				lcd_write_string("", 0, 2);
 				lcd_write_string("", 0, 3);
 				clrscr();
+				// Draws game window and UI
 				drawGameTitle(X2,Y2);
 				drawWindowNoTitle(X1,Y1,X2,Y2,1);
 				IO ^= 1 << 3;
@@ -154,10 +156,11 @@ int32_t gameMenu(){
 }
 
 void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5][5], struct projectile_t *proj, struct powerup *pUp1, struct powerup *pUp2, struct asteroid *asteroid1, struct asteroid *asteroid2){
+	// Configures map according to choosen map in gameMenu() and initialises all structs according to map
 	int32_t i = gameMenu();
 	if (CHECK_BIT(i,0)){
 
-		// asteroid
+		// Asteroid map
 
 		initPlayer(p1, 50, 10, 0, sprite,1);
 		initPlayer(p2, 100, 10, 180, sprite,2);
@@ -170,7 +173,7 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 
 	} else if (CHECK_BIT(i,1)){
 
-		// star destroyer
+		// Star Destroyer map
 
 		initPlayer(p1, 50, 10, 0, sprite,1);
 		initPlayer(p2, 200, 80, 180, sprite,2);
@@ -184,7 +187,7 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 
 	} else {
 
-		// black hole
+		// Deep Space map
 
 		initPlayer(p1, 50, 10, 0, sprite,1);
 		initPlayer(p2, 200, 80, 180, sprite,2);
@@ -201,6 +204,7 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 }
 
 void initBoss(){
+	//  Prints boring text on screen to trick unexpected visits from boss
 	global = 0;
 	bgcolor(7);
 	fgcolor(0);

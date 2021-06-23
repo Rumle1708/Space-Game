@@ -60,10 +60,12 @@ void color(uint8_t foreground, uint8_t background) {
 }
 
 void setRGBColorFG(uint8_t red, uint8_t  green, uint8_t  blue){
+	// Set foreground color of PuTTY in range of 0 to 255
 	printf("%c[%d;%d;%d;%d;%dm",0x1B, 38, 2, red, green, blue);
 }
 
 void setRGBColorBG(uint8_t red, uint8_t  green, uint8_t  blue){
+	// Set background color of PuTTY in range of 0 to 255
 	printf("%c[%d;%d;%d;%d;%dm",0x1B, 48, 2, red, green, blue);
 }
 
@@ -73,6 +75,7 @@ void resetbgcolor() {
 }
 
 void clrscr(){
+	// Clears screen
 	printf("%c[2J%c[H", 0x1B,0x1B);
 }
 
@@ -81,6 +84,7 @@ void clreol(){
 }
 
 void gotoxy(uint8_t x, uint8_t y){
+	// Moves cursor to specific coordinate x,y of PuTTY
 	printf("%c[%d;%df", 0x1B, y, x);
 }
 
@@ -127,16 +131,21 @@ void drawSquare(uint8_t width, uint8_t height, uint8_t x, uint8_t y){
 }
 
 void drawCircle(int32_t r, int32_t x, int32_t y){
+	// Draws a simple circle with radius center in x,y
 	int32_t i;
 	for(i = 0; i < 360; i++){
+		// Loops around in every point in the circle
 		gotoxy(approxShift14(2*r*cosinus(i)) + x,approxShift14(r*sinus(i)) + y);
 		printf(" ");
 	}
 }
 
 void drawWindow(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, char title[], uint32_t style){
+	// Draws the game window borders with a title and a style
 	uint32_t i;
 	int corner1, corner2, corner3, corner4, titleLeft, titleRight, bottom, side;
+
+	// Style selection
 	if (style == 0){
 		corner1 = 0xDA;
 		corner2 = 0xBF;
@@ -174,7 +183,7 @@ void drawWindow(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, char title[]
 	printf("%c", titleRight);
 	printf("%c", corner2);
 
-	// Bund
+	// Bottom
 	gotoxy(x1,y2);
 	printf("%c", corner3);
 	for (i = 0; i <= x2 - x1 - 2; i++){
@@ -182,14 +191,14 @@ void drawWindow(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, char title[]
 	}
 	printf("%c", corner4);
 
-	// Venstre side
+	// Left side
 	gotoxy(x1,y1 + 1);
 	for (i = 0; i <= y2 - y1 - 1; i++){
 		printf("%c", side);
 		gotoxy(x1,y1 + 1 + i);
 	}
 
-	// Højre side
+	// Right side
 	gotoxy(x2,y1 + 1);
 	for (i = 0; i <= y2 - y1 - 1; i++){
 		printf("%c", side);
@@ -198,7 +207,10 @@ void drawWindow(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, char title[]
 }
 
 void drawWindowNoTitle(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t style){
+	// Draws the game window borders with no title and a style
 	uint32_t i;
+
+	// Style selection
 	int corner1, corner2, corner3, corner4, bottom, side;
 	if (style == 0){
 		corner1 = 0xDA;
@@ -248,8 +260,11 @@ void drawWindowNoTitle(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint3
 }
 
 void drawGameTitle(uint32_t x2, uint32_t y2){
+	// Function name is misleading. This Function actually creates the UI
     int32_t i, j;
 
+
+    // Creates grey backplate
     setRGBColorBG(128,128,128);
     gotoxy(1,y2 + 1);
     for (i = 0; i < 24; i++){
@@ -259,6 +274,7 @@ void drawGameTitle(uint32_t x2, uint32_t y2){
         printf("\n");
     }
 
+    // Draws red bar graph
     setRGBColorBG(210,0,0);
     drawSquare(3,2,3,y2 + 3);
     drawSquare(3,2,8,y2 + 3);
@@ -273,6 +289,7 @@ void drawGameTitle(uint32_t x2, uint32_t y2){
     drawSquare(3,2,43,y2 + 3);
     drawSquare(3,2,48,y2 + 3);
 
+    // Draws yellow bar graph
     setRGBColorBG(100,0,0);
     drawCircle(1,14, y2 + 15);
     drawCircle(2,14, y2 + 15);
@@ -281,6 +298,7 @@ void drawGameTitle(uint32_t x2, uint32_t y2){
     setRGBColorBG(0,0,0);
     drawCircle(5,14, y2 + 15);
 
+    // Draws green bar graph
     setRGBColorBG(0,128,0);
     drawCircle(1,40, y2 + 15);
     drawCircle(2,40, y2 + 15);
@@ -289,6 +307,7 @@ void drawGameTitle(uint32_t x2, uint32_t y2){
     setRGBColorBG(0,0,0);
     drawCircle(5,40, y2 + 15);
 
+    // Draws blue screen
     drawWindowNoTitle(x2 - 60, y2 + 2, x2 - 4, y2 + 22, 0);
     setRGBColorBG(0,128,128);
     drawSquare(55, 19, x2 - 59, y2 + 3);
