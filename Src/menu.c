@@ -156,7 +156,7 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 		powerupInit(pUp2, 150, 75, 2);
 
 		drawAsteroid(asteroid1, 100, 50, 20);
-
+		drawAsteroid(asteroid2, 0, 0, 0);
 
 	} else if (CHECK_BIT(i,1)){
 
@@ -178,7 +178,15 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 
 		initPlayer(p1, 50, 10, 0, sprite,1);
 		initPlayer(p2, 100, 10, 180, sprite,2);
+
 		powerupInit(pUp1, 100, 50, 1);
+		powerupInit(pUp2, 150, 20, 2);
+
+		drawAsteroid(asteroid1, 0, 0, 0);
+		drawAsteroid(asteroid2, 0, 0, 0);
+
+
+
 	}
 
 	initProjectiles(proj);

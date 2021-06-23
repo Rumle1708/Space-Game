@@ -183,9 +183,6 @@ void updatePlayer(struct player2_t *p, int32_t angle, int32_t throttle){
 
 			drawPlayer(p);
 
-
-
-
 	} else {
 
 		for(int32_t i = 0; i < 5; i++){

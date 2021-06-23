@@ -5,6 +5,8 @@
  *      Author: Mads Rumle Nordstrom
  */
 
+#include "thorTing.h"
+
 #ifndef PROJECTILE_H_
 #define PROJECTILE_H_
 #define ENTITIES 10

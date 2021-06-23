@@ -10,8 +10,7 @@
 #include "player.h"
 #include "math.h"
 #include "ansi.h"
-#include "projectile.h"
-
+#include "thorTing.h"
 
 void initProjectiles(struct projectile_t *p){
 	for(int32_t i = 0; i < ENTITIES; i++){
@@ -53,7 +52,15 @@ void updateProjectiles(struct projectile_t *p){
 				p[i].time++;
 
 			}
+		} else {
+
+			gotoxy(approxShift14(p[i].posX),approxShift14(p[i].posY));
+
+			printf("%c",0x20);
+
+
 		}
+
 	}
 
 	fgcolor(0);

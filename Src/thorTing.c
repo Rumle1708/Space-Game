@@ -10,8 +10,8 @@
 #include "ansi.h"
 #include "player.h"
 #include "main.h"
-#include "thorTing.h"
 #include "string.h"
+#include "thorTing.h"
 
 void drawAsteroid(struct asteroid *a, int32_t x1, int32_t y1, int32_t size1) {
 	fgcolor(15);
@@ -80,9 +80,9 @@ int32_t projDist (struct projectile_t proj, struct asteroid a) {
 		kort = distX;
 		lang = distY;
 	}
-	int32_t distTotal = (lang * 7 / 8 + kort / 2) >> 14; //Approximeret afstand til asteroide
+	int32_t distTotal = (lang * 7 / 8 + kort / 2); //Approximeret afstand til asteroide
 	// enhedskoordinater fra spiller til asteroide
-	return distTotal;
+	return approxShift14(distTotal);
 }
 
 int32_t astDist (struct player2_t p, struct asteroid a) {
@@ -103,7 +103,8 @@ int32_t astDist (struct player2_t p, struct asteroid a) {
 	}
 	int32_t distTotal = (lang * 7 / 8 + kort / 2); //Approximeret afstand til asteroide
 	// enhedskoordinater fra spiller til asteroide
-	return distTotal;
+
+	return approxShift14(distTotal);
 }
 
 int collisionPlayer (struct player2_t p, struct asteroid a) {
@@ -114,30 +115,26 @@ int collisionPlayer (struct player2_t p, struct asteroid a) {
 
 	if (astDist(p,a) < a.size * 2) {
 		if (playerX >= a.x && playerY <= a.y) { // første kvadrant
-			//printf("er i forste kvadrant");
 			for (i = 270; i <= 360; i = i + 3) {
 				if (playerX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY >= (approxShift14(sinus(i)*a.size) + a.y)) {
 					c = 1;
 				}
 			}
 		} else if (playerX < a.x && playerY <= a.y) { // anden kvadrant
-			//printf("er i anden kvadrant");
 			for (i = 180; i <= 270; i = i + 3) {
-				if (playerX >= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && playerY >= approxShift14(sinus(i)*a.size) + a.y) {
+				if (playerX >= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY >= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
 			}
 		} else if (playerX < a.x && playerY > a.y) { // tredje kvadrant
-			//printf("er i tredje kvadrant");
 			for (i = 90; i <= 180; i = i + 3) {
-				if (playerX >= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
+				if (playerX >= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
 			}
 		} else { // fjerde kvadrant
-			//printf("er i fjerde kvadrant");
 			for (i = 0; i <= 90; i = i + 3) {
-				if (playerX <= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
+				if (playerX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
 			}
@@ -153,43 +150,39 @@ int collisionPlayer (struct player2_t p, struct asteroid a) {
 
 int collisionProjectile (struct projectile_t p, struct asteroid a) {
 	int c = 0;
-	int projectileX = p.posX >> 14;
-	int projectileY = p.posY >> 14;
+	int playerX = p.posX >> 14;
+	int playerY = p.posY >> 14;
 	int32_t i;
 
 	if (projDist(p,a) < a.size * 2) {
-		if (projectileX >= a.x && projectileY <= a.y) { // første kvadrant
-			//printf("er i forste kvadrant");
+		if (playerX >= a.x && playerY <= a.y) { // første kvadrant
 			for (i = 270; i <= 360; i = i + 3) {
-				if (projectileX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && projectileY >= (approxShift14(sinus(i)*a.size) + a.y)) {
+				if (playerX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY >= (approxShift14(sinus(i)*a.size) + a.y)) {
 					c = 1;
 				}
 			}
-		} else if (projectileX < a.x && projectileY <= a.y) { // anden kvadrant
-			//printf("er i anden kvadrant");
+		} else if (playerX < a.x && playerY <= a.y) { // anden kvadrant
 			for (i = 180; i <= 270; i = i + 3) {
-				if (projectileX >= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && projectileY >= approxShift14(sinus(i)*a.size) + a.y) {
+				if (playerX >= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY >= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
 			}
-		} else if (projectileX < a.x && projectileY > a.y) { // tredje kvadrant
-			//printf("er i tredje kvadrant");
+		} else if (playerX < a.x && playerY > a.y) { // tredje kvadrant
 			for (i = 90; i <= 180; i = i + 3) {
-				if (projectileX >= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && projectileY <= approxShift14(sinus(i)*a.size) + a.y) {
+				if (playerX >= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
 			}
 		} else { // fjerde kvadrant
-			//printf("er i fjerde kvadrant");
 			for (i = 0; i <= 90; i = i + 3) {
-				if (projectileX <= approxShift14(cosinus(i) * a.size * 18 / 10) + a.x && projectileY <= approxShift14(sinus(i)*a.size) + a.y) {
+				if (playerX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
 			}
 		}
 	}
 
-	if (projectileX <= X1 || projectileX >= X2 || projectileY <= Y1 || projectileY >= Y2) {
+	if (playerX <= X1 || playerX >= X2 || playerY <= Y1 || playerY >= Y2) {
 		c = 1;
 	}
 
