@@ -146,17 +146,17 @@ void movePlayer(struct player2_t *p1, struct player2_t *p2, struct asteroid aste
 	// Moves player one and two according to gravitational pull from asteroids
 	if(asteroid1.size != 0){
 
-		gravity(p1, asteroid1);
+		gravity(p1, asteroid1); // Adds gravity pull of player1 towards asteroid1
 
-		gravity(p2, asteroid1);
+		gravity(p2, asteroid1); // Adds gravity pull of player2 towards asteroid1
 
-		if(collisionPlayer(p1, asteroid1)){
+		if(collisionPlayer(p1, asteroid1)){ // Detects collision between player1 and asteroid1
 
 			p1->lives = 0;
 
 		}
 
-		if(collisionPlayer(p2, asteroid1)){
+		if(collisionPlayer(p2, asteroid1)){ // Detects collision between player2 and asteroid1
 
 			p2->lives = 0;
 		}
@@ -164,17 +164,17 @@ void movePlayer(struct player2_t *p1, struct player2_t *p2, struct asteroid aste
 
 	if(asteroid2.size != 0){
 
-		gravity(p1, asteroid2);
+		gravity(p1, asteroid2); // Adds gravity pull of player1 towards asteroid2
 
-		gravity(p2, asteroid2);
+		gravity(p2, asteroid2); // Adds gravity pull of player2 towards asteroid2
 
-		if(collisionPlayer(p1, asteroid2)){
+		if(collisionPlayer(p1, asteroid2)){ // Detects collision between player1 and asteroid2
 
 			p1->lives = 0;
 
 		}
 
-		if(collisionPlayer(p2, asteroid2)){
+		if(collisionPlayer(p2, asteroid2)){ // Detects collision between player2 and asteroid2
 
 			p2->lives = 0;
 

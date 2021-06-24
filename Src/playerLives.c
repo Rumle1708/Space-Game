@@ -47,7 +47,7 @@ void printLives(struct player2_t p, int32_t pos){
 			for(int32_t i = 0; i <= 3; i++){
 				for(int32_t j = 0; j <= 3; j++){
 					gotoxy(238 + i,5 + j);
-					printf("#");
+					printf("%c", 0xDB);
 				}
 			}
 

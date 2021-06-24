@@ -162,8 +162,8 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 
 		// Asteroid map
 
-		initPlayer(p1, 50, 10, 0, sprite,1);
-		initPlayer(p2, 100, 10, 180, sprite,2);
+		initPlayer(p1, 50, 10, 0, sprite,12);
+		initPlayer(p2, 200, 80, 180, sprite,2);
 
 		powerupInit(pUp1, 75, 20, 1);
 		powerupInit(pUp2, 150, 75, 2);
@@ -175,7 +175,7 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 
 		// Star Destroyer map
 
-		initPlayer(p1, 50, 10, 0, sprite,1);
+		initPlayer(p1, 50, 10, 0, sprite,12);
 		initPlayer(p2, 200, 80, 180, sprite,2);
 
 		powerupInit(pUp1, 100, 40, 1);
@@ -189,7 +189,7 @@ void configureLevel(struct player2_t *p1, struct player2_t *p2, int32_t sprite[5
 
 		// Deep Space map
 
-		initPlayer(p1, 50, 10, 0, sprite,1);
+		initPlayer(p1, 50, 10, 0, sprite,12);
 		initPlayer(p2, 200, 80, 180, sprite,2);
 
 		powerupInit(pUp1, 100, 50, 1);

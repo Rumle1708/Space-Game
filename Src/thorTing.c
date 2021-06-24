@@ -4,9 +4,6 @@
  *  Created on: 13. jun. 2021
  *      Author: Bruger
  */
-#define Height 7
-#define Width 10
-
 #include "stm32f30x_conf.h" // STM32 config
 #include "30010_io.h" 		// Input/output library for this course
 #include "ansi.h"
@@ -17,33 +14,41 @@
 #include "thorTing.h"
 #include "math.h"
 
+// Constants for character in titleScreen() function
+#define Height 7
+#define Width 10
+
 void drawAsteroid(struct asteroid *a, int32_t x1, int32_t y1, int32_t size1) {
+	// Draws an asteroid struct with a position and size
 	fgcolor(15);
 		(*a).x = x1;
 		(*a).y = y1;
 		(*a).size = size1;
 		for (int i = 0; i <= 360; i++) {
-			gotoxy(approxShift14(cosinus(i)*size1) * 18 / 10 + (*a).x, approxShift14(sinus(i)*size1) + (*a).y);
+			// Draws circle resembling an asteroid
+			gotoxy(approxShift14(cosinus(i)*size1 * 18 / 10) + (*a).x, approxShift14(sinus(i)*size1) + (*a).y); // Scales asteroid to be round in PuTTY
 			printf("%s", "o");
 		}
-		(*a).vol = (M_PI * 4 / 3 * size1 * size1 * size1) >> 14;
+		(*a).vol = (M_PI * 4 / 3 * size1 * size1 * size1) >> FIX14_SHIFT; // Determines volume of asteroid to estimate gravity
 	fgcolor(0);
 }
 
 void gravity (struct player2_t *p, struct asteroid a) {
+	// Updates player based on gravitational pull
 	fgcolor(15);
-	const int gravityConst = (1 << FIX14_SHIFT) / 2000; //Tweekes til passende tyngdekraft
+	const int gravityConst = (1 << FIX14_SHIFT) / 2000; // Can be tweaked to fitting gravity
 	int32_t lang, kort;
-	// x og y-koordinater fra spiller til asteroide
+	// x and y coordinates from asteroid to player
 	int32_t distX = ((a.x << FIX14_SHIFT) - (*p).posX);
 	int32_t distY = ((a.y << FIX14_SHIFT) - (*p).posY);
-
 	int32_t tempX = distX;
 	int32_t tempY = distY;
 
+	// Changes sign of number if negative
 	if (tempX < 0) tempX *= -1;
 	if (tempY < 0) tempY *= -1;
 
+	// Sets long and short distance to later approximate hypotenus
 	if (distX > distY) {
 		lang = tempX;
 		kort = tempY;
@@ -51,17 +56,20 @@ void gravity (struct player2_t *p, struct asteroid a) {
 		kort = tempX;
 		lang = tempY;
 	}
-	int32_t distTotal = (lang * 7 / 8 + kort / 2) >> 14; //Approximeret afstand til asteroide
-	// enhedskoordinater fra spiller til asteroide
+	int32_t distTotal = (lang * 7 / 8 + kort / 2) >> 14; // Approximated distance to asteroid via hypotenus approximation
 
+	// Changes sign of number if negative
 	if (tempX < 0) distX *= -1;
 	if (tempY < 0) distY *= -1;
 
+	// Unity vectors
 	int32_t deviceVectorX = (distX / distTotal);
 	int32_t deviceVectorY = (distY / distTotal);
-	// volumen af asteroide
+
+	// Volume of asteroids
 	int32_t vol = a.vol;
-	// sætter de hastighedsvektorer som påvirker spilleren fra asteroiden
+
+	// Updates players velocity vectors according to gravitational pull
 	(*p).velX += (gravityConst * vol / (distTotal * distTotal) * deviceVectorX) >> FIX14_SHIFT;
 	(*p).velY += (gravityConst * vol / (distTotal * distTotal) * deviceVectorY) >> FIX14_SHIFT;
 
@@ -69,14 +77,18 @@ void gravity (struct player2_t *p, struct asteroid a) {
 }
 
 int32_t projDist (struct projectile_t *proj, struct asteroid a) {
+	// Approximates a projectiles distance to an asteroid
 	int32_t lang, kort;
-	// x og y-koordinater fra spiller til asteroide
+
+	// x and y coordinates from projectile to asteroid
 	int32_t distX = ((a.x << FIX14_SHIFT) - proj->posX);
 	int32_t distY = ((a.y << FIX14_SHIFT) - proj->posY);
 
+	// Changes sign of number if negative
 	if (distX < 0) distX *= -1;
 	if (distY < 0) distY *= -1;
 
+	// Sets long and short distance to later approximate hypotenus
 	if (distX > distY) {
 		lang = distX;
 		kort = distY;
@@ -105,39 +117,45 @@ int32_t astDist (struct player2_t *p, struct asteroid a) {
 		kort = distX;
 		lang = distY;
 	}
-	int32_t distTotal = (lang * 7 / 8 + kort / 2); //Approximeret afstand til asteroide
-	// enhedskoordinater fra spiller til asteroide
+
+	int32_t distTotal = (lang * 7 / 8 + kort / 2);	// Approximated distance to asteroid via hypotenus approximation
 
 	return approxShift14(distTotal);
 }
 
 int32_t collisionPlayer (struct player2_t *p, struct asteroid a) {
+	// Function outputs '1' if player has collided with asteroid, otherwise '0'
 	int c = 0;
 	int playerX = p->posX >> 14;
 	int playerY = p->posY >> 14;
 	int32_t i;
 
 	if (astDist(p,a) < a.size * 2) {
-		if (playerX >= a.x && playerY <= a.y) { // første kvadrant
+	// checks if player is within 2 radiuses of asteroid center
+		if (playerX >= a.x && playerY <= a.y) { // checks if player is within first quadrant compared to asteroid center
 			for (i = 270; i <= 360; i = i + 3) {
+				//checks if player is within the body of the asteroid
 				if (playerX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY >= (approxShift14(sinus(i)*a.size) + a.y)) {
 					c = 1;
 				}
 			}
-		} else if (playerX < a.x && playerY <= a.y) { // anden kvadrant
+		} else if (playerX < a.x && playerY <= a.y) { // checks if player is within second quadrant
 			for (i = 180; i <= 270; i = i + 3) {
+				//checks if player is within the body of the asteroid
 				if (playerX >= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY >= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
 			}
-		} else if (playerX < a.x && playerY > a.y) { // tredje kvadrant
+		} else if (playerX < a.x && playerY > a.y) { // checks if player is within third quadrant
 			for (i = 90; i <= 180; i = i + 3) {
+				//checks if player is within the body of the asteroid
 				if (playerX >= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
 			}
-		} else { // fjerde kvadrant
+		} else { // checks if player is within fourth quadrant
 			for (i = 0; i <= 90; i = i + 3) {
+				//checks if player is within the body of the asteroid
 				if (playerX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
@@ -153,32 +171,37 @@ int32_t collisionPlayer (struct player2_t *p, struct asteroid a) {
 }
 
 int32_t collisionProjectile (struct projectile_t *p, struct asteroid a) {
+	// Function outputs '1' if projectile has collided with asteroid, otherwise '0'
 	int c = 0;
 	int playerX = p->posX >> 14;
 	int playerY = p->posY >> 14;
 	int32_t i;
 
 	if (projDist(p,a) < a.size * 2) {
-		if (playerX >= a.x && playerY <= a.y) { // første kvadrant
+		if (playerX >= a.x && playerY <= a.y) { // checks if projectile is within first quadrant compared to asteroid center
 			for (i = 270; i <= 360; i = i + 3) {
+				//checks if projectile is within the body of the asteroid
 				if (playerX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY >= (approxShift14(sinus(i)*a.size) + a.y)) {
 					c = 1;
 				}
 			}
-		} else if (playerX < a.x && playerY <= a.y) { // anden kvadrant
+		} else if (playerX < a.x && playerY <= a.y) { // checks if projectile is within second quadrant
 			for (i = 180; i <= 270; i = i + 3) {
+				//checks if projectile is within the body of the asteroid
 				if (playerX >= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY >= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
 			}
-		} else if (playerX < a.x && playerY > a.y) { // tredje kvadrant
+		} else if (playerX < a.x && playerY > a.y) { // checks if projectile is within third quadrant
 			for (i = 90; i <= 180; i = i + 3) {
+				//checks if projectile is within the body of the asteroid
 				if (playerX >= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
 			}
-		} else { // fjerde kvadrant
+		} else { // checks if projectile is within fourth quadrant
 			for (i = 0; i <= 90; i = i + 3) {
+				//checks if projectile is within the body of the asteroid
 				if (playerX <= (approxShift14(cosinus(i) * a.size * 18 / 10) + a.x) && playerY <= approxShift14(sinus(i)*a.size) + a.y) {
 					c = 1;
 				}
@@ -194,6 +217,7 @@ int32_t collisionProjectile (struct projectile_t *p, struct asteroid a) {
 }
 
 void titleScreen(char letter[]) {
+	// Draws a string with large letters
 	int x1 = 10, y1 = 10;
 
 	char	A[Height][Width] ={	"   _/_/  ",

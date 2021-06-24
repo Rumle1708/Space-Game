@@ -14,6 +14,7 @@
 #include "main.h"
 
 void initTimer(){
+	// Sets timer to interrupt 24 times every second
 	RCC->APB1ENR |= RCC_APB1Periph_TIM2;
 	TIM2->CR1 = 0x0000;
 	TIM2->ARR = 0x002A; // 42
@@ -25,6 +26,7 @@ void initTimer(){
 }
 
 void TIM2_IRQHandler(void) {
+	// Increments global which is used in main to update game
 	global++;
 	TIM2->SR &= ~0x0001; // Clear interrupt bit
 }
